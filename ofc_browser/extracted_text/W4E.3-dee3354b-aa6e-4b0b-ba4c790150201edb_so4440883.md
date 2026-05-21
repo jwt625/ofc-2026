@@ -1,0 +1,72 @@
+# **200-Gb/s 1060-nm Single-Mode Coupled-Cavity VCSEL Enabling Modal-dispersion Free >50-GHz Bandwidth over 500-m Multimode Fiber**
+
+## **Hameeda R. Ibrahim1, 2, Ahmed Hassan1, 3, Xiaodong Gu1, 4 and Fumio Koyama1**
+
+*1 Institute of Science Tokyo (formerly Tokyo Institute of Technology), 4259 Nagatsuta, Midori-ku, Yokohama 226-8503, Japan 2 Faculty of Science, Minia University, Egypt* 3 Department of Physics, Faculty of Science, Al-Azhar University, Assuit, Egypt *4 Ambition Photonics Inc., Tokyo, Japan Email: koyama@pi.titech.ac.jp*
+
+**Abstract:** We demonstrate modal-dispersion-free transmission over 500-m multi-mode-fiber (MMF) using high-speed 1060-nm single-mode coupled-cavity VCSEL and SMF-patch center launch, achieving 200-Gb/s data transmission over 500-m MMF(OM4), resulting in the record datarate·link length product of 100-Gbps·km.
+
+#### **1. Introduction**
+
+Vertical-cavity surface-emitting lasers (VCSELs) [1] have long defined short-reach optical interconnects in data centers, with 850-nm devices driving the deployment of 100-Gb/s per lane transmission over multimode fibers (MMFs) [2]. However, further scaling of 850-nm VCSELs toward higher modulation bandwidths and longer link distances is constrained by chromatic dispersion, modal dispersion, and thermal reliability issues. Currently, 850-nm multimode VCSELs, used in conjunction with MMFs, are widely deployed for links below 100 m, supporting data rates up to 100 Gb/s PAM4 per lane in commercial systems [2] and up to 200 Gb/s per lane in research demonstrations [3–6]. Nevertheless, extending operation beyond 200 Gb/s per lane remains challenging. In contrast, 1060-nm VCSELs offer several advantages over their 850-nm counterparts, including improved reliability, enhanced electrostatic-discharge (ESD) tolerance [7], superior energy efficiency, and higher modulation speeds enabled by the coupled-cavity design [8, 9]. They also support flip-chip bonding for packaging flexibility in CPO transceivers [10]. These attributes make 1060-nm VCSELs strong candidates for next-generation high-speed optical interconnects.
+
+However, at 1060 nm, OM4 fibers exhibit significantly reduced bandwidth owing to non-optimized modal dispersion, which degrades transmission performance [11]. Previous studies have demonstrated 1060-nm VCSEL transmission over MMFs at moderate reaches and data rates [12–15], highlighting the potential of this wavelength band for extended-reach MMF interconnects. Yet, pushing beyond 30 m at lane rates near 200 Gb/s remains fundamentally limited by modal dispersion [16]. Considerable efforts have therefore been devoted to improving the effective modal bandwidth of MMFs [17–19], including the use of mode-conditioning patch cords. Our preliminary experiments showed that a center-launch configuration effectively mitigates modal dispersion in MMFs [16].
+
+In this work, we leverage this center-launch approach in combination with a high-speed 1060-nm single-mode coupled-cavity VCSEL featuring a metal-aperture design that expands the mode-field diameter to a few µm. We report, to our knowledge, the first demonstration of 200-Gb/s PAM4 transmission over 500 m of standard OM4 MMF using only an SMF-patch center launch. The achieved performance corresponds to a record data-rate–distance product of 100 Gb/s·km.
+
+#### **2. Device Structure**
+
+Figures 1 (a) shows the cross-sectional schematics of the metal-aperture (MA) coupled cavity VCSEL. The 1060 nm VCSEL with six In0.35Ga0.65As/GaAs quantum wells includes 6 pairs of top p-type semiconductor DBR and 34 pairs of bottom n-type DBR. The shallow relief of the semiconductor surface enables lateral coupling within the oxide region [8]. The coupling strength is controlled by the surface relief depth, thereby enhancing the bandwidth. The oxide aperture diameter is 3.3 µm. Lateral resonance occurs due to reflection at the boundary of the intra-contact metal. An isolated layer SiN is 1.5um thick to reduce parasitic capacitance. A five-pair SiO2/Ta2O5 dielectric DBR was formed.
+
+#### **3. Results**
+
+Figure 1(b) shows the L/I characteristics and lasing spectra of the fabricated 1060 nm metal-aperture VCSEL. The single-mode output power is over 3 mW with an SMSR exceeding 40 dB across the entire current range. Figure 1(c) shows the high-resolution lasing spectra for different bias currents. A sub-peak can be seen with a separation of 0.2nm from the main mode, which is corresponding to 50 GHz of photon-photon lateral resonance, boosting the modulation bandwidth.
+
+![](_page_1_Figure_2.jpeg)
+
+Fig. 1 (a) Schematic structure, (b) L/I characteristics, and (c) high-resolution lasing spectra of 1060nm intracavity MA VCSEL.
+
+We measured small-signal modulation response (10\*log(S21) dBo) and large signal modulations of the MA-VCSEL. The measurement setup is shown in Fig.2 (a). In order to realize the center launch configuration, the output is coupled into standard single-mode fiber (G652) connected to OM4 MMF (100m and 500m lengths) via a FC connector. Figure 2 (b) shows the near-filed patterns at the fiber facet from the SMF and 100m-MMF. The MFD is 8.8µm and 13.1µm for the SMF and MMF outputs, respectively. Those are almost in agreement with the calculation (8.1µm and 13µm) for the fundamental mode of a standard SMF and GI-MMF at 1060nm. The small signal response is measured using a vector network analyzer (Keysight N9952B) and a photodetector (Thorlabs DXM50AF). The results show a high - 3 dBo optical modulation bandwidth over 45GHz at 6mA in BTB thanks to the coupled cavity. We also measured the small-signal modulation response for 100m and 500m OM4 MMFs without and with the SMF patch cable in Fig. 3(a) and 3(b), respectively. The bandwidth is significantly dropped because of overfilled launch condition as shown in Fig. 3(a). The effective modal bandwidth is limited to 1.1GHz·km. In contrast, the link bandwidth reaches over 50 GHz even for 500m OM4 transmission with the SMF patch center launch as shown in Fig.3(b). The result exhibits a modal dispersion-free MMF transmission thanks to the single-mode operation of the VCSEL and center launch configuration. The -3dBo bandwidth is even higher after the MMF transmission which is caused by the negative fiber dispersion and frequency chirp.
+
+![](_page_1_Figure_5.jpeg)
+
+Fig.2 (a) Measurement setup for MMF link, (b) SMF patch cable center launch with measured near-field patterns.
+
+![](_page_1_Figure_7.jpeg)
+
+Fig. 3 Small signal modulation response (dBo) after 100m and 500m OM4 MMFs with (a) overfill-launch and (b) center launch by SMF patch.
+
+Fig. 4 Eye patterns of PAM4-200Gbps at 6mA (a) back-to-back, (b) after 500m MMF link.
+
+We carried out large-signal modulation measurements using the Keysight M8198A pattern generator with a word length of 29 -1. We used 16-tap pre-equalization and 26-taps on the receiver side. The 200Gbps PAM-4 eye pattern at BTB is shown in Fig. 4(a), exhibiting eye opening with an outer extinction ratio of 2.5 dB and TDECQ of 4.4 dB. Even after 500m OM4 MMF transmission, no degradation of an outer extinction ratio of 2.7dB and TDECQ of 4.3 dB cannot be seen, as shown in Figs. 4(b), thanks to the center-launch configuration.
+
+### **4. Conclusion**
+
+We have demonstrated that a 1060-nm single-mode coupled-cavity VCSEL with a modulation bandwidth exceeding 45 GHz enables modal-dispersion-free transmission over 500-m of OM4 multimode fiber when combined with a simple SMF-patch center-launch technique. This represents a fundamental advance, as multimode fiber links for 200- Gb/s operation have traditionally been limited to < 100-m, even at the 850-nm wavelength optimized for modal dispersion. The key innovation resides in the device architecture: the coupled-cavity and metal-aperture design expands the mode-field diameter and enforces stable single-mode operation, providing a near-ideal optical source for both SMF and MMF links. As a result, the same transceiver achieves 200-Gb/s PAM4 transmission over 500-m of MMF with performance indistinguishable from SMF links [8. 20], establishing a unified platform for future shortreach networks. This device-driven breakthrough preserves the intrinsic advantages of GaAs-based 1060-nm VCSELs—ultralow energy consumption, excellent ESD robustness, and mature manufacturability—while eliminating the long-standing barrier of modal dispersion in MMFs. The demonstrated capability opens the 1060-nm wavelength window for wide-spectrum shortwave division multiplexing (SWDM) and positions 1060-nm single-mode VCSELs as a cornerstone technology for the next generation of high-capacity, energy-efficient, and scalable AI data-center interconnects.
+
+#### **Acknowledgements**
+
+These research results were obtained from the commissioned research (No. 23901) by National Institute of Information and Communications Technology (NICT) Japan. The authors acknowledge Keysight Technologies for providing support with the high-speed measurement equipment.
+
+#### **References**
+
+- [1] K. Iga, "Vertical-cavity surface-emitting laser: Its conception and evolution," Jpn. J. Appl. Phys. 47(1R), 1-10, 2008.
+- [2] J. Wang, M. V. R. Murty, Z. Feng, S. Taslim, A. Sridhara, X. Cai, A. L. Harren, N. Leong, G. H. Koh, A. Cheng, D. W. Dolfi, J. Chu, L. M. Giovane, "100Gb/s PAM4 oxide VCSEL development progress at Broadcom," Proc. SPIE 11300, 113000G (2020).
+- [3] R. Murty," Toward 200G per Lane VCSEL-based Multimode Links," OFC 2024, M2D.3 (2024).
+- [4] N. Ledentsov Jr., L. Chorchos,O. Yu. Makarov,V. A. Shchukin, V. P. Kalosha, J.-R. Kropp, J. P. Turkiewicz, C. Kottke, V. Jungnickel, R. Freund,and N. N. Ledentsov, "Serial data transmission at 224 Gbit/s applying directly modulated 850 and 910 nm VCSELs," Electron. Lett., vol. 57, no. 19, pp. 735 (2021).
+- [5] T. Zuo, T. Zhang, S. Zhang, and L. Liu, "850-nm VCSEL-Based Single-Lane 200-Gbps PAM-4 Transmission for Datacenter Intra-Connections", IEEE PTL, vol 33, no.18, pp. 1042-1045 (2021).
+- [6] T. Wettlin, Y. Lin, N. Stojanovic, S. Calabr, R. Wang, L. Zhang and M. Kuschnerov, "200Gb/s VCSEL transmission using 60m OM4 MMF and KP4 FEC for AI computing clusters," arXiv preprint arXiv:2403.17275 (2024).
+- [7] K. Takeda, Y. Iwane, M. Yamazoe, T. Hamada, K. Suzuki, Hi. Nakayama, H. R. Ibrahim, X. Gu and F. Koyama, "Highly Reliable 1060nm Metal-Aperture Single-Mode VCSEL with 180Gbps Direct Modulation at 85℃," to be presented, Photonics West 2026.
+- [8] H. R. Ibrahim, A. M. A. Hassan, X. Gu, S. Shinada, M. Ahmed and F. Koyama, "50Gbps single mode 1060nm intracavity metal aperture VCSEL with transverse resonance," CLEO 2021, SF2F5 (2021).
+- [9] H.R. Ibrahim, A. M. A. Hassan, C. Ge, X. Gu and F. Koyama, " Record 50GHz Bandwidth 1060nm Metal-aperture Coupled-cavity VCSELs Enabling 240Gbps PAM4 Modulation," OECC2025, PDP-1-2 (2025).
+- [10] T. Azuma, K. Nagashima, L. Dong, W. Yoshida, Y. Harada, K. Nishizaki, M. Miyoshi, X. Gu, T. Yagisawa, H. Nasu and F. Koyama, "An Ultra-Compact CPO Transceiver based on 1060-nm Single-Mode VCSEL Array and Multi-Core Fiber," ECOC 2024, Th2C.1 (2024).
+- [11] X. Chen, H. Dong, H. Chen, J. E. Hurley, Z. D. Bullock and M.-J. Li, "Wavelength Dependence of Modal Bandwidth of Multimode Fibers for High Data Rate Transmission and Its Implications," Photonics, vol.11, no.7, 10.3390 (2024).
+- [12] S.K. Pavan, J. Lavrencik, R. Shubochkin, Y. Sun, J. Kim, D. Vaidya, R. Lingle, T. Kise, and S. E. Ralph "50Gbit/s PAM-4 MMF Transmission Using 1060nm VCSELs with Reach beyond 200m," Proc. OFC 2014, W1F.5 (2014).
+- [13] J. Lavrencik, E. Simpanen, S. Varughese, A. Melgar, V.A. Thomas, J. S. Gustavsson, W.V. Sorin, S. Mathai, M. Tan, A. Larsson, and S. E. Ralph., "Error-Free 100Gbps PAM-4 Transmission over 100m OM5 MMF using 1060nm VCSELs," Proc. OFC 2019, M1F.3. (2019).
+- [14] A. Larsson, "Advances in VCSELs for Optical Interconnects," Optical Fiber Technology, vol. 44, pp. 20-30, (2018).
+- [15] E. Simpanen, J. S. Gustavsson, A. Larsson, M. Karlsson, W. V. Sorin, S. Mathai, M. R. Tan, and S. R. Bickham., "1060-nm Single-Mode VCSEL Transmission over Single- and Multi-Mode Fibers," Journal of Lightwave Technology, vol. 37, no. 2, pp. 233-240, (2019).
+- [16] H.R. Ibrahim, A. M. A. Hassan, C. Ge, X. Gu and F. Koyama, "High-speed 200 Gbps 1060 nm Single-Mode Coupled-Cavity VCSEL Enabling 30 m OM4 Multimode Fiber Links," ECOC2025, W.01.02.1 (2025).
+- [17] A. Larsson et al., "1060 nm VCSELs for long-reach optical interconnects," Opt. Fiber Technol., vol. 44, pp. 36–42, (2018),
+- [18] X. Chen, K. Li, J. E. Hurley, J.S. Stone and M. J. Li, "Modal Bandwidth and Single-Mode VCSEL Transmission Capability Over Multimode Fibers," IEEE Photon. Technol. Lett., vol.33, no.3, pp.155-158 (2021)
+- [19] Y. Chen, S. Patel, H. Dong, H. Chen, J. E. Hurley, N. Ledentsov and M.-J. Li, "Modal Bandwidth Enhancement through Launch Condition Control in Multimode Fibers," Photonics, vol. 12, no. 7, pp. 654, (2025).
+- [20] Y. Iwama, T. Yagisawa, S. Ide, K. Takeda, C. Ge, X. Gu and F. Koyama, "SM-TCC-VCSEL-based 800 Gbps Linear Drive Pluggable Transceiver," Optical Fiber Communication Conference, Post-deadline Paper, Th4C\_07 (2024).

@@ -1,0 +1,90 @@
+# <span id="page-0-1"></span>Training-Phase-Aware Optical Circuit Switching Reconfiguration for Large Language Model
+
+Fangxiao Dong1,2, Aakash Patel<sup>3</sup> , Robert Kleijnen<sup>3</sup> , Tongyun Li<sup>1</sup> , James Myers<sup>2</sup> , Richard Penty<sup>1</sup> , and Qixiang Cheng1,\*
+
+> *<sup>1</sup>Department of Engineering, University of Cambridge, Cambridge, CB3 0FA, UK imec, 20 Station Road, Cambridge CB1 2JD, UK 3 imec, 3001 Leuven, Belgium \*qc223@cam.ac.uk*
+
+Abstract: We propose a phase-aware optical network that employs OCSs to dynamically reconfigure into phase-optimal topologies, while leveraging Rabenseifner's/Bruck mappings and slot amortisation, achieving 37.5% faster communication over static optical networks under established LLM training configurations.
+
+## 1. Introduction
+
+During the past decade, the computational demand for AI training has roughly doubled every six months [1, 2], outpacing single-GPU performance improvements nearly five times [3,4]. This imbalance has made scale-out GPU systems essential for modern deep learning (DL) workloads [5]. At these scales, the performance of the GPU interconnect fabric that links GPUs and facilitates data exchange becomes a key determinant of overall system performance [5]. According to [6], network communication can account for up to 60% of the iteration time in Meta's production deep neural network (DNN) training, with similar, non-negligible communication overheads discussed in multiple studies [7, 8].
+
+Conventional distributed DL interconnects are typically built on electrical packet-switch (EPS)-based Clos or fat-tree data centre networks (DCNs), which are optimised for bursty and short-lived traffic. However, large language model (LLM) training shows periodic, sustained, and bandwidth-intensive collective communication. Optical interconnects provide higher bandwidth density and energy efficiency than electrical links, making them well-suited for LLM training, especially at large scales. Moreover, optical circuit switches (OCSs), which are inherently compatible with optical links, can further reduce queuing and switching latency via its dynamic and non-blocking connectivity [9].
+
+An LLM training job typically comprises multiple communication phases driven by different parallelism strategies, including data parallelism (DP), tensor parallelism (TP), and pipeline parallelism (PP), each with distinct collective patterns. However, most existing OCS-based optical interconnects adopt inter-job configurations. This gap motivates our design of a phase-aware reconfigurable optical network (RON) architecture that employs OCSs to reconfigure across phases within a single job, better aligning with the structured workload of LLM training.
+
+The proposed RON (1) optimises OCS topology configuration across communication phases, (2) employs microbatch-slot amortisation to hide reconfiguration latency, and (3) achieves considerable communication time improvement over both electrical and static optical interconnects in large-scale networks.
+
+#### 2. Phase-Aware OCS Reconfiguration
+
+In LLM training, each iteration is typically divided into forward propagation, backward propagation, and a weight update stage. Fig. [1](#page-0-0) shows the phase timeline of an iteration. During these processes, communication time arises from data exchanges required by different types of parallelism: (1) TP occurs during the forward and backward passes of each layer. Since data exchange between tensor partitions is required in every attention and MLP operation, which makes TP the most frequently occurring communication phase. (2) PP takes place between pipeline stages, where activations and gradients are transmitted during the forward and backward passes, respectively. (3) DP occurs at the very end of the backward pass to produce a global update. It aggregates gradients across replicas, making it the least frequent but most data-intensive communication phase.
+
+<span id="page-0-0"></span>![](_page_0_Figure_13.jpeg)
+
+Fig. 1: Phase-Aligned Communication Timeline. Fig. 2: Ring versus Rabenseifner's all-
+
+![](_page_0_Figure_15.jpeg)
+
+reduce (*P*=4).
+
+In DP, we employ Rabenseifner's all-reduce instead of typical ring all-reduce [\[10\]](#page-0-1), as shown in Fig. [2,](#page-0-0) reducing step complexity from 2(*P*DP −1) to 2⌈log<sup>2</sup> *P*DP⌉ (or 2⌈log*<sup>k</sup> P*DP⌉ with wavelength-division multiplexing (WDM) enabled k-nomial trees). In each step, each GPU exchanges data with only one peer at a time via an OCS-enabled one-hop optical link, preserving full port bandwidth and reducing communication latency. This improvement becomes significant at large scales. In TP, communication arises primarily from all-gather and reduce-scatter operations. The Bruck's algorithm with 2⌈log<sup>2</sup> *P*TP⌉ rounds is employed. It follows a deterministic one-hop permutation schedule with balanced port utilisation, making it highly compatible with OCS and well-suited to prescheduled control [\[11\]](#page-0-1). In PP, pipe-rail scheduling maintains one-step data transfer between neighbouring stages, ensuring low latency and efficient reuse across microbatches.
+
+Microbatching is employed during parallel execution: each training step is partitioned into *S* consecutive microbatches. At the start of each communication phase, one-hop optical circuits are established among the participating GPUs and then reused across those *S* microbatches. Consequently, the effective per-collective startup latency becomes αeff = αbase + *t* reconf *S* , where αbase is the per-collective latency and *t*reconf is the OCS reconfiguration time.
+
+#### 3. Implementation and Setup
+
+Fig. [3](#page-1-0) illustrates the system architecture of inter-node and intra-node domains, where inter-node communication is handled by a reconfigurable optical fabric (RON) implemented with an *N* ×*N* SiPh MZI–Benes OCS with rearrangeably non-blocking connectivity [\[12\]](#page-0-1), while intra-node traffic remains within an 8-GPU NVLink/NVSwitch domain. The RON control plane comprises a phase profiler, topology planner, and reconfiguration orchestrator. It receives communication phase information from the training scheduler and selects the corresponding OCS topology configuration for each phase. Port mappings are then issued at phase boundaries to realise optical circuit reconfiguration. This mechanism is compatible with existing distributed training frameworks and is triggered by an NCCL pre-collective hook before launching collective operations. An end-to-end reconfiguration latency on the order of tens of µs is assumed. Recent SiPh OCS prototypes present device-level switching ranging from ns to a few µs, providing sufficient headroom for control overheads and guard intervals [\[13,](#page-0-1) [14\]](#page-0-1).
+
+<span id="page-1-0"></span>![](_page_1_Figure_6.jpeg)
+
+Fig. 3: System architecture: inter-node RON and intra-node NVLink/NVSwitch.
+
+Intra-node configuration: Each node is configured as an 8-GPU HGX H100 server, equipped with NVIDIA H100 SXM5 GPUs (132 streaming multiprocessors, 80 GB HBM) [\[15\]](#page-0-1). The intra-node communication is supported by NVSwitch (NVLink Gen4), providing an aggregate bandwidth of approximately 3.6 Tb/s and a latency of 10 ns across all configurations. Inter-node configurations: (1) *Electrical Network (EN)*: A packet-switched folded-Clos InfiniBand fabric with 400 Gb/s per-node uplink capacity [\[16\]](#page-0-1). DP/TP ring all-reduce and PP exchanges both traverse multi-hop Clos paths. (2) *Static Optical Network (SON)*: A fixed optical ring provides 1.6 Tb/s per node. DP and TP employ ring all-reduce over the physical ring (multi-hop). For PP, consecutive pipeline stages are mapped to a fixed *k*-hop segment of the ring, determined by the chosen parallelism configuration. (3) *RON*: A phase-aware reconfigurable optical fabric (1.6 Tb/s per node) enables Rabenseifner/Bruck-style collectives for DP/TP and provides direct adjacency between consecutive stages for PP. The OCS slot size is fixed at *S* = 16, allowing phase-aligned scheduling with slot reuse, so reconfiguration occurs once every 16 microbatches. Parallelism configuration: A hybrid parallelism strategy combining DP, TP, and PP is adopted. TP is prioritised within the intra-node domain since its communication occurs most frequently, as discussed in Section 2, followed by PP, whereas DP is usually placed across the inter-node domain. Simulator: The simulator used is an extension of [\[17\]](#page-0-1), which integrates AMPeD [\[18\]](#page-0-1) and DeepFlow [\[19\]](#page-0-1).
+
+#### 4. Results
+
+Fig. [4](#page-2-0) presents the estimated training time breakdown of RON, SON, and EN under representative models, including GPT-3 175B, Megatron 310B, 530B, and 1T, trained with established configurations of DP–TP–PP ratios and GPU scales, as reported in prior large-scale deployments [\[15,17\]](#page-0-1). As the model size scales from 175B to 1T, RON consistently achieves the lowest communication time ratio. Averaged across the four models, RON reduces communication time by approximately 37.5% compared with SON, and by 656.7% compared with EN. In addition, the waiting time due to pipeline bubbles is negligible and not shown in the figure.
+
+Fig. [5](#page-2-0) shows the scalability evaluation based on GPT-3 175B, fixing TP (intra-node = 8) and PP (inter-node =
+
+2) while sweeping DP from 16 to 16k. We sweep along DP since it scales best across nodes: replicas compute independently and synchronise gradients only once per optimisation step. By contrast, PP is constrained by pipeline bubbles and stage-level load imbalance, and TP has frequent per-layer collectives. As a result, both rarely scale beyond tens of degrees of parallelism. Fig. [5](#page-2-0) shows RON's communication time improvement over SON and EN. As the number of GPUs increases, RON's advantage expands substantially, and at 65k GPUs it achieves an 85.3% communication-time improvement over SON and more than 1049.3% over EN.
+
+<span id="page-2-0"></span>![](_page_2_Figure_3.jpeg)
+
+![](_page_2_Figure_4.jpeg)
+
+Fig. 4: Training time breakdown across large-scale models. Fig. 5: Communication time improve-
+
+ment.
+
+### 5. Discussion
+
+Dynamically reconfigurable OCS networks show potential for large-scale LLM training, but several system-level aspects remain to be investigated: (A) Software stack changes: Kernel-level modifications across phases, depending on both workload and system implementation, and requiring additional inter-phase synchronisation. (B) Security: The flexibility of direct, non-packetised connectivity requires node isolation or firewall mechanisms to securely serve diverse workloads within shared infrastructure. (C) Low data volumes: Workloads with short but frequent communications may suffer from frequent reconfiguration, where a static start-up configuration is preferred. (D) Hierarchical switch network: Achieving large-scale networks requires careful consideration of OCS radix, as low-radix switches require multi-layer designs, increasing control-plane complexity. (E) Endurance: Further validation is needed to ensure OCS maturity for data centre applications, where high endurance and reliability are essential.
+
+# 6. Conclusion
+
+The proposed phase-aware RON achieves notable gains in communication efficiency and scalability through onehop optical circuits and reduced step complexity, with an average of 37.5% faster communication than SON under representative LLM training configurations. Beyond the aforementioned practical considerations, future work will explore: (1) integrating WDM-enabled *k*-nomial topologies to further reduce communication steps; (2) enabling compute-communication overlap to hide latency; and (3) replacing intra-node electrical fabrics with in- /co-packaged SiPh optical I/O (OIO/CPO) using short-reach WDM links, and co-designing the intra-/inter-node domains to evaluate training time, energy, and scalability.
+
+Acknowledgement: This work was supported by the European Union's Horizon Europe Research and Innovation Programme under Grant Agreement No. 101070560 (PUNCH). The authors would like to thank Paraskevas Bakopoulos and Giannis Patronas from the NVIDIA Photonic Systems team in Athens for their valuable feedback that improved this work.
+
+# References
+
+- [1] J. Sevilla *et al.*, "Compute Trends Across Three Eras of Machine Learning," *IJCNN*, 2022.
+- [2] J. Sevilla, "Training Compute of Frontier AI Models Grows by 4–5x per Year," *Epoch AI Blog*, 2024.
+- [3] S. Lee *et al.*, "Forecasting GPU Performance for Deep Learning Training and Inference," *ASPLOS*, 2025.
+- [4] G. Patronas *et al.*, "Optical Switching for Data Centers and Advanced Computing Systems [Invited]," *J. Opt. Commun. Netw.*, 2025.
+- [5] W. Li *et al.*, "Fast and Scalable All-Optical Network Architecture for Distributed Deep Learning," *J. Opt. Commun. Netw.*, 2024.
+- [6] W. Wang *et al.*, "TopoOpt: Co-optimizing Network Topology and Parallelization Strategy for Distributed Training Jobs," *USENIX NSDI*, 2023.
+- [7] L. Liu *et al.*, "Topologies in Distributed Machine Learning: Comprehensive Survey, Recommendations and Future Directions," *Neurocomputing*, 2024.
+- [8] M. Khani *et al.*, "SiP-ML: High-Bandwidth Optical Network Interconnects for Machine Learning Training," *SIGCOMM*, 2021.
+- [9] Y. Lu *et al.*, "X-NEST: A Scalable, Flexible, and High-Performance Network Architecture for Distributed Machine Learning," *J. Lightw. Technol.*, 2021.
+- [10] W. Won *et al.*, "TACOS: Topology-Aware Collective Algorithm Synthesizer for Distributed Machine Learning," *MICRO*, 2024.
+- [11] J. Chen *et al.*, "Performance Evaluation of Allgather Algorithms on Terascale Linux Cluster with Fast Ethernet," *HPCASIA*, 2005.
+- [12] Q. Cheng *et al.*, "Recent Advances in Optical Technologies for Data Centers: A Review," *Optica*, 2018. [13] A. Kumar *et al.*, "Chip-to-Chip Photonic Connectivity in Multi-Accelerator Servers for ML," 2025.
+- [14] B. Sun et al., "Nanosecond Electro-Optic Switching with Time Synchronisation for Fronthaul TSN Applications," ECOC, 2025.
+- [15] NVIDIA, "NVIDIA Hopper Architecture In-Depth," *NVIDIA Blog*, 2022.
+- [16] NVIDIA, "NVIDIA Quantum-2 InfiniBand Architecture," *NVIDIA Networking*, 2024.
+- [17] A. Patel *et al.*, "Accelerating Large Language Model Training with In-Package Optical Links for Scale-Out Systems," *ISVLSI*, 2024.
+- [18] D. Moolchandani *et al.*, "AMPeD: An Analytical Model for Performance in Distributed Training of Transformers," *ISPASS*, 2023.
+- [19] N. Ardalani *et al.*, "DeepFlow: A Cross-Stack Pathfinding Framework for Distributed AI Systems," *ACM Trans. Des. Autom. Electron. Syst.*, 2024.

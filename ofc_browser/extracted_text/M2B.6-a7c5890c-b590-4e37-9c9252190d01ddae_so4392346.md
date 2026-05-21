@@ -1,0 +1,63 @@
+# **Scaling IM/DD Interconnects to 400 Gb/s per Lane: Component and System-Level Tradeoffs**
+
+**Anna Tatarczak, Roberto Rodes, Andrei Kaikkonen, Young Kai Chen, Julie Eng** *Coherent Corp., 5100 Patrick Henry Dr, Santa Clara, CA 95054, USA anna.tatarczak@coherent.com*
+
+**Abstract:** Scaling intensity-modulated direct-detection (IM/DD) interconnects to 400 Gb/s per lane demands innovations across modulators, photodiodes, amplifiers, and fibers. This paper analyzes high-speed E/O components, modulation formats, and design strategies enabling energyefficient 400 Gb/s data-center links.
+
+## **1. Introduction**
+
+The rapid growth of artificial intelligence/machine learning (AI/ML) applications with exponential growth of cloud workloads demands higher-speed intra–data-center optical interconnects. Scaling lane rates from today's 200 Gb/s toward 400 Gb/s would double switch throughput and networked compute workload, while improving integration density and lowering cost per bit. Under these elevated lane rates, the link performance is increasingly limited by electrical interconnect loss and chromatic dispersion. This paper highlights a few component- and system-level tradeoffs when scaling IM/DD interconnects to 400 Gb/s per lane.
+
+#### **2. 400 Gb/s capable components – channel bandwidth**
+
+Enabling 400 Gb/s IM/DD links can be achieved using a 4-level pulse amplitude modulation (PAM4) with component bandwidths beyond 100 GHz. Employing higher-order modulation formats may further relax bandwidth requirements at the cost of increased sensitivity to noise, linearity constraints, and implementation penalties. As >100 GHz-class electro-optical components are emerging, this work surveys practical opto-electrical devices with PAM4 modulation which would meet desirable margins at 400 Gb/s lane rate for IM/DD optic fiber links.
+
+## *2.1. Transmitter*
+
+Several material platforms can be used to produce modulators with bandwidths beyond 100 GHz. In addition to high bandwidth, one needs to consider low-voltage operation, low optical loss, high E-O conversion and high energy efficiency. Silicon photonics offers strong scalability and compatibility with complementary metal-oxidesemiconductor (CMOS) electronics, but current production processes of modulators with 70-80 GHz bandwidth do not yet provide sufficient bandwidth for 400 Gb/s operations [1]. Indium phosphide (InP) supports native laser integration and has demonstrated high-bandwidth and low drive voltage operations in both Mach–Zehnder modulators (MZMs) and differential electro-absorption modulators (diff-EMLs) [2, 3]. Emerging platforms such as thin-film lithium niobate (TFLN) provide ultra-high bandwidth, low loss, and good linearity but currently rely on less mature manufacturing ecosystems [4]. Other promising material systems aimed at enabling very highbandwidth performance include barium titanate (BTO) [5], silicon–organic hybrid (SOH) [6], and plasmonics [7]. These are still under active research and development, as challenges remain in device reliability and process standardization.
+
+![](_page_0_Figure_11.jpeg)
+
+Fig. 1. Measured frequency responses of components suitable for 400G link: a) 400G InP DiffEML b) 400G IM-DD driver c) Simulated TX 426 Gb/s Eye diagram d) InP backside illuminated PD flip-chipped on a TIA.
+
+In addition to the modulator, the transmitter requires a high-bandwidth electrical driver co-designed with the modulator. With drivers and modulators component bandwidth enabling 400 Gb/s operation, system performance is dominated by insertion loss, electrical interconnect length, group delay control, thermal robustness, and overall energy efficiency. Fig. 1a) shows a measured frequency response of a 1310 nm InP diff-EML. This modulator at T=20ºC requires a driver voltage swing of 2.0 Vppd on 100 Ω load. Fig. 1b) shows a measured frequency response of a 400 Gb/s IM/DD driver. Both modulator and driver are exceeding 100 GHz bandwidth. Our large signal simulations of these two components with an optimized printed circuit board (PCB) trace and 20 feed forward equalizer (FFE) taps show an eye diagram (Fig. 1c) with an extinction ratio of 4.9 dB, optical modulation amplitude (OMA) of 8.6 dBm, transmitter dispersion and eye closure (TDECQ) of 1.5 dB, and good linearity.
+
+#### *2.2. Receiver*
+
+On the receive side, multiple material platforms can support bandwidths higher than 100 GHz, including InP [8] and germanium (Ge) (or SiGe) on silicon [9]. In addition to high bandwidth, receiver performance is governed by responsivity, dark current, saturation behavior, and noise, which directly impact link sensitivity and energy efficiency. At these data rates, a joint optimization of the photodiode (PD), transimpedance amplifier (TIA), and package parasitics, including control of input capacitance, electrical interconnect and impedance matching, are required. Fig. 1d) shows a measured frequency response of an InP backside-illuminated photodiode integrated with a TIA, demonstrating a bandwidth beyond 100 GHz and indicating feasibility for 400 Gb/s PAM4 receiver operation.
+
+# *2.3. Transmission distance*
+
+Chromatic dispersion (CD) imposes an upper reach limit at 400 Gb/s, with approximately 1.5 km achievable for single-wavelength transmission assuming typical diff-EML modulator chirp, and about 0.5 km for coarse wavelength-division multiplexing (CWDM) operation for IM/DD links through a normal glass fiber with minimal dispersion at 1300 nm. Reach can be extended through digital signal processing (DSP) techniques such as maximum-likelihood sequence estimation (MLSE), optical chromatic dispersion compensation, or new types of fibers such as hollow core fiber (HCF). Since most intra–data-center links are shorter than 30 m [10], 400 Gb/sper-lane operation is viable for most deployments, although existing standardized reach definitions may need to be revisited.
+
+![](_page_1_Figure_7.jpeg)
+
+Fig. 2. Simulated Electrical power at RX and BER vs. OMA for a) 200 Gb/s PAM4 b) 400 Gb/s PAM4.
+
+#### **3. Link budget**
+
+To evaluate the link budget of 400 Gb/s-capable IM/DD systems, we perform simulations following the methodology used for standardized 200 Gb/s links. For the 200 Gb/s case, we assume a transmitter relative intensity noise (RIN) of –141 dB/Hz, a photodiode responsivity of 0.7 A/W, an input-referred noise (IRN) of 18 pA/rt(Hz) of TIA, and a receiver bandwidth equal to the Nyquist bandwidth of the transmission rate. For the 400 Gb/s case, the receiver input-referred noise (IRN) is assumed to increase to 30 pA/rt(Hz) and the PD responsivity is reduced to 0.5 A/W, reflecting the expected component performance at bandwidths exceeding 100 GHz. The transmitter relative intensity noise (RIN) is improved from –141 dB/Hz to –144 dB/Hz, such that the total transmitter noise contribution due to RIN is assumed to remain constant between the 200 Gb/s and 400 Gb/s cases. A pre-FEC BER threshold of 5×10⁻⁵ is adopted to provide implementation margin relative to the KP4 FEC limit. The simulated received electrical power and BER as functions of received OMA (Rx OMA) for both 200 Gb/s and 400 Gb/s operation are presented in Fig. 2. At low Rx OMA, performance is limited by receiver input-referred noise, whereas at higher Rx OMA the dominant impairments are transmitter nonlinearity and laser RIN. Under these assumptions, doubling the baud rate results in an approximately 5 dB receiver sensitivity penalty. Preserving link margin therefore requires either increased transmitter optical power or enhanced DSP capability, both of which lead to higher electrical power consumption and increased thermal dissipation. Alternatively, the link budget may be improved through further component-level enhancements, including reduced laser RIN, lower TIA IRN, and higher PD responsivity.
+
+#### **4. Open challenges**
+
+Implementing 400 Gb/s-per-lane IMDD transceivers is facing challenges in optimizing optoelectronics components, high frequency packages, power consumption, thermal management, and transmission reach. Higher equalization strength is often required to mitigate electrical and optical impairments, increasing DSP power, while stronger forward error correction (FEC) impacts both latency and energy efficiency. Integration choices such as flip-chip versus wire-bond packaging affects bandwidth, parasitics, and cooling. Overall link efficiency is further influenced by serializer/deserializer (SerDes) and gearbox architectures, where conversion efficiency becomes critical at these data rates.
+
+## **5. Conclusion**
+
+Achieving 400 Gb/s per lane with IM/DD is feasible but requires a holistic system approach. Material systems support >100 GHz bandwidths, yet balancing bandwidth, noise, and power remains the core challenge. Integration maturity and efficient DSP and SerDes will determine its scalability.
+
+#### **Acknowledgements**
+
+We would like to thank our colleagues at Coherent Corp. Jarfalla, Fremont, IC team, and Milmont teams working on 400Gb/s diff EMLs, PDs*,* drivers, and systems. We would also like to acknowledge Marvell for collaboration on TIA and PD interface.
+
+# **9. References**
+
+- [1] S. K. Yeh *et al*., "Silicon Photonics Platform for Next Generation Data Communication Technologies," *2024 IEEE International Electron Devices Meeting (IEDM)*, San Francisco, CA, USA, 2024.
+- [2] Y. Ogiso, J. Ozaki, K. Sugiura, H. Yamazaki, H. Taniguchi, S. Kanazawa, M. Nakamura, Y. Miyamoto, M. Ishikawa, and A. Kaneko, "Uncooled O-band InP MZ Modulator PIC for 3.2 Tb/s (400 Gb/s/lane) Pluggable Transceiver," in *Optical Fiber Communication Conference (OFC) Postdeadline Papers 2025*, Postdeadline Paper Digest (Optica Publishing Group, 2025), paper Th4D.1.
+- [3] S. Okuda *et al*., "High-Speed 340 Gbps PAM4 and 450 Gbps PAM6 Operations of Narrow High-Mesa EML," in *Journal of Lightwave Technology*, vol. 44, no. 3, 2026.
+- [4] C. St-Arnault et al., "Net 1.6 Tbps (4×400Gbps/λ) O-Band IM/DD Transmission Over 2 km Using Uncooled DFB Lasers on the LAN-WDM grid and Sub-1V Drive TFLN Modulators," 2024 Optical Fiber Communications Conference and Exhibition (OFC), San Diego, CA, USA, 2024.
+- [5] W. Li et al., "Thin-Film BTO-Based MZMs for Next-Generation IMDD Transceivers Beyond 200 Gbps/λ," in Journal of Lightwave Technology, vol. 42, no. 3, pp. 1143-1150, 1 Feb.1, 2024.
+- [6] A. Schwarzenberger *et al*., "First demonstration of a silicon-organic hybrid (SOH) modulator based on a long-term-stable crosslinked electrooptic material," *49th European Conference on Optical Communications (ECOC 2023)*, Hybrid Conference, Glasgow, UK, 2023.
+- [7] Yannik Horst, David Moor, Daniel Chelladurai, Tobias Blatter, Sónia Fernandes, Laurenz Kulmer, Michael Baumann, Hande Ibili, Christian Funck, Killian Keller, Marcel Destraz, Wolfgang Heni, Loïc Chérix, Yuqi Liu, Hua Wang, Stefan M. Koepfli, and Juerg Leuthold, "Ultrawideband MHz to THz plasmonic EO modulator," Optica 12, 325-328, 2025.
+- [8] E. Chao *et al*., "Ultrafast Modified Uni-Traveling Carrier Photodiode with 3-dB Bandwidth of 150 GHz," *2021 Conference on Lasers and Electro-Optics (CLEO)*, San Jose, CA, USA, 2021.
+- [9] D. Steckler, S. Lischke, A. Peczek, A. Kroh, J. Beyer and L. Zimmermann, "Monolithic Integration of 80-GHz Ge Photodetectors and 100- GHz Ge Electro-Absorption Modulators in a Photonic BiCMOS Technology," in *IEEE Transactions on Electron Devices*, vol. 71, no. 5, 2024. [10] V. Bhatt, "On Continued Significance of Multimode Links in Data Centers," in *Journal of Lightwave Technology*, vol. 43, no. 4, 2025.

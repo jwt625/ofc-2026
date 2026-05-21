@@ -1,0 +1,65 @@
+# **O-Band Silicon-Plasmonic Resonant Ring Modulator Demonstrating Net-Rates of 400 Gbps**
+
+**Samuel Hess1,\* , Laurenz Kulmer<sup>1</sup> , Chenrui Xu<sup>1</sup> , Tobias Blatter<sup>1</sup> , Vladimir Shadymov<sup>2</sup> , Matthew Garrett<sup>2</sup> , Benedikt Baeuerle<sup>2</sup> , Wolfgang Heni<sup>2</sup> , Claudia Hoessbacher<sup>2</sup> , Oskars Ozolins3,4 and Juerg Leuthold1,\***
+
+*<sup>1</sup> ETH Zurich, Institute of Electromagnetic Fields (IEF), 8092 Zurich, Switzerland <sup>2</sup>Polariton Technologies AG, 8134 Adliswil, Switzerland 3 Institute of Photonics, Electronics and Telecommunications, Riga Technical University, 1048 Riga, Latvia, and <sup>4</sup>Kista High-Speed Transmission Lab, RISE Research Institutes of Sweden, 16440 Kista, Sweden [\\*hess@ief.ee.ethz.ch,](mailto:*hess@ief.ee.ethz.ch) [juerg.leuthold@ief.ee.ethz.ch](mailto:juerg.leuthold@ief.ee.ethz.ch)*
+
+**Abstract:** We demonstrate the first silicon-photonics plasmonic O-band resonant ring modulator with on-chip losses of 2.2dB, reaching net 400Gbps by employing PAM8 signaling. We show improved temperature stability compared to pure SiPh rings, lowering control efforts. © 2026 The Author(s)
+
+### **1. Introduction**
+
+Rapid growth in intra-datacenter traffic driven predominantly by artificial intelligence has strained short-reach (≤2 km) interconnects [1]. For these distances, intensity-modulation/direct-detection (IM/DD) is attractive for its low latency, power consumption, and cost[1], [2]. These factors are driving the transition from 1.6 Tb/s (≈200 Gb/s/λ) links to 3.2 Tb/s systems (≈400 Gb/s/λ) and beyond. Towards this end, the electro-optic bandwidth must be increased in tandem with improvements in DSP performance and computational efficiency[3].
+
+For these short-reach links, O-band IM/DD links are attractive because the near-zero dispersion of standard singlemode fiber (SSMF) spares chromatic dispersion-induced degradation. To date, very few modulator technologies have achieved net rates beyond 400 Gb/s in the O-band, notably thin-film lithium-niobate (TFLN) and InP [2], [3], [4], [5].
+
+Plasmonics has emerged as a solution to enhance standard SiPh with ultra-compact, high-speed modulators. It is particularly suited for applications requiring high bandwidths [7], small footprint[6], energy efficiency [7] and photonic cointegration [8]. Plasmonic MZMs have surpassed the 400 Gb/s/λ threshold in both C-band (419 Gb/s [9]) and O-band (413 Gb/s [6]). Plasmonic resonant ring modulators (RRMs) have recently gained attention for their low insertion loss (IL) <2 dB[10], [11] and significantly improved thermal stability compared to silicon micro-ring modulators [12]. To date, no O-band resonant ring modulator (RRM) operating beyond 400 Gb/s/λ has been demonstrated.[12]. Plasmonic RRMs offer a significantly lower temperature than silicon micro-ring modulators [12], which enables them to be deployed in harsh environments.
+
+In this paper, we demonstrate the first SiPh-based ring modulator with a bandwidth of more than 100 GHz and capable of reaching more than net 400 Gbps in the O-Band. The highest achieved net data rate of 445 Gbps was at 168 GBd PAM 8 employing only linear DSP. We compare the performance of the device in different systems. First, we directly take an 80 GHz AWG and compare the performance to a 130 GHz frequency interleaved AWG. We report that for higher bandwidth, lower spectral efficiency techniques can provide higher data rates and demonstrate above 400 Gbps achievable information rate at 224 GBd PAM 4. We measure the temperature stability of the plasmonicring and show a lower temperature susceptibility than pure silicon rings.
+
+### **2. Experimental Setup**
+
+Two experimental setups are presented, which are shown in Fig. 1(a) and (b). The frequency interleaved system is presented in Fig. 1(a): The silicon-plasmonic ring modulator (RRM) is fed optically by a Tunable Laser Source (TLS) with a power of 11 dBm at a wavelength of 1305.2 nm and is electrically driven by a frequency-domain interleaver unit (FDIU) with a bandwidth of more than 120 GHz, which is connected to an arbitrary waveform generator (AWG) with 256 GSa/s [13]. The transmitter digital signal processing (DSP) generates pulse-amplitude modulated (PAM) signals with a square-root-raised cosine shape. After the RRM, the signal is amplified using a praseodymium-doped fiber amplifier (PDFA) and a subsequent 2 nm band-pass filter (BPF) to reduce the out-of-band noise. The setup further consists of 0 or 2 km of fiber after the BPF, followed by a variable optical attenuator (VOA) and a 100 GHz photodiode (PD). The PD is connected to a 110 GHz digital storage oscilloscope (DSO), which samples the signal with 256 GSa/s. In Fig 1(b) the system without FDIU is presented: The plasmonic RRM is fed by a TLS at 1317 nm with a power of 11 dBm and is electrically driven by an 80 GHz AWG. The signal is then transmitted through the same link, where only the 100 GHz PD was swapped to a 70 GHz. The offline receiver DSP is the same in both cases and consists of a matched filter, a timing recovery, a T/2-spaced LMS feed-forward equalizer (FFE) with 1501 taps.
+
+The RRM used in this experiment is illustrated in Fig 1(c) and was fabricated and designed by Polariton on the plasmonic PIC platform [14]. The plasmonic slot in the ring is 6 µm long. Optical coupling to and from the chip is done using grating couplers (GC), which exhibit an insertion loss of approximately 2.8 dB each. The on-chip device insertion loss (IL) at the operating wavelength is 2.6 dB with a static extinction ratio (ER) of 12.5 dB, see Fig. 1(d). The electro-optic bandwidth of the device exceeds 100 GHz, see Fig. 1(e)
+
+![](_page_1_Figure_3.jpeg)
+
+Fig. 1. Data measurement setup. Inset (a) shows the high bandwidth setup using the FDIU (b) showing the setup using directly the AWG (c) schematic layout of the used plasmonic RRM with dimensions (d) normalized spectrum of the plasmonic RRM, spectrum is normalized to the lowest loss of 7.8 dB at 1303.3 nm (e) normalized electro/optic response of the measured plasmonic RRM which offers more than 100 GHz of bandwidth (f) observed rise time of the optical power given a rectangular driving signal to the thermo optic phase shifter of the RRM (g) resonance shift depending on the temperature. The plasmonic rings (blue, yellow) outperform the silicon ring, data from [15].
+
+## 3. Device Temperature Stability and Controllability
+
+Varying temperatures as they occur in datacenters pose a challenge to silicon ring modulators. To compensate for these temperature changes the ring modulator used in this experiment exploits a thermo-optic phase-shifter (TOPS). To estimate the temperature change per second that the TOPS can control a bandwidth and a resonance-shift measurement were performed, see Fig 1(e) and Fig 1(f), respectively. The bandwidth was estimated to 25 kHz with the well-known formula  $f_{3dB}=0.35/\tau_r$ , where  $\tau_r$  is the rise time from 10 to 90 percent. The temperature dependence of the normalized resonance is measured 0.048/K and 0.054/K for the two devices, which is nearly an order of magnitude lower than for silicon rings as in [15]. This is due to the effect that the plasmonic-organic section and the silicon have opposite thermal coefficients. Combining these two results the ring should be able to track a linear temperature change of up to 63 K/ms. The capability to compensate for faster temperature changes can be further improved by device design that improves TOPS speed and efficiency as well as a temperature robust RRM design.
+
+# 4. Data Transmission Results
+
+Fig. 2(a-d) respectively shows the net data rate (NDR), achievable information rate (AIR), normalized general mutual information (NGMI), and bit error rate (BER), using PAM-4 (blue) and PAM-8 (yellow) formats at various symbol rates with Setup A (cross markers) and Setup B (circle markers). NDRs were obtained by multiplying line rates with code rates determined from NGMI thresholds in [14]. As shown, net 400Gbps data rate is achieved with 160GBd PAM8 in Setup A and 144GBd PAM8 in Setup B. Compared with the Setup A, the Setup B has higher system bandwidth and shows much higher symbol rates and NDRs with PAM4 (396Gbps @ 224GBd and Setup A v.s. 338Gbps @ 184GBd in Setup B). However, considering the PAM8 modulation formats, Setup B with less system bandwidth shows better peak performance than Setup A. This is because the high signal quality (SNR) is more critical for PAM8, while Setup A offers more system bandwidth with FDIU, but used an additional electrical amplifier to boost the signal after FDIU, leading to worse signal quality.
+
+![](_page_2_Figure_2.jpeg)
+
+Fig. 2. Transmission results: (a)–(d) Net data rate (NDR), achievable information rate (AIR), normalized generalized mutual information (NGMI) and bit error rate (BER) for Setup A and Setup B, respectively; (e)-(f) eye diagrams measured with Setup A for PAM-8 at 150 GBd and PAM-4 at 224 GBd..
+
+## **5. Conclusions**
+
+To the best of our knowledge, we have demonstrated, for the first time, an O-band silicon photonic plasmonic resonant ring modulator enabling net data rates up to 445 Gb/s (168 GBd PAM-8) and >400 Gb/s achievable rates at 224 GBd PAM-4, enabling 3.2 Tb/s systems and beyond. The device features an EO bandwidth exceeding 100 GHz and shows improved temperature stability over conventional SiPh micro ring modulators, confirming its potential for high-speed, thermally robust O-band interconnects.
+
+# **6. Acknowledgements**
+
+We acknowledge the Horizon Projects Proteus-6G (101096909), Flex-Scale (101096909), ECO-eNET (101139133) and Allegro (101092766). Polariton Technologies AG thanks Lightwave Logic for supplying the electrooptic PerkinamineTM chromophore series 3 material, and the Cleanroom and Operations team of the Binning and Rohrer Nanotechnology Center (BRNC) for their support. ETH Zurich acknowledges partial funding by Huawei Technologies Duesseldorf GmbH.
+
+# **7. References**
+
+- [1] E. Berikaa *et al.*, "TFLN MZMs and Next-Gen DACs: Enabling Beyond 400 Gbps IMDD O-Band and C-Band Transmission," *IEEE Photonics Technol. Lett.*, vol. 35, no. 15, pp. 850–853, Aug. 2023, doi: 10.1109/LPT.2023.3285881.
+- [2] X. Chen *et al.*, "540Gbps IMDD Transmission over 30km SMF using 110GHz Bandwidth InP EML," 2025.
+- [3] C. St-Arnault *et al.*, "Net 3.2 Tbps 225 Gbaud PAM4 O-Band IM/DD 2 km Transmission Using FR8 and DR8 with a CMOS 3 nm SerDes and TFLN Modulators," 2025.
+- [4] A. Ostrovskis *et al.*, "Optical Amplification-Free 400 Gbps Net Bitrate Links with a TFLN-based Transmitter," 2025.
+- [5] Y. Ogiso *et al.*, "Uncooled O-band InP MZ Modulator PIC for 3.2 Tb/s (400 Gb/s/lane) Pluggable Transceiver," 2025.
+- [6] L. Kulmer *et al.*, "O-Band Plasmonic MZM enabling Single Carrier net 400 Gbit/s IM/DD over 1 km Fiber".
+- [7] A. Tibaldi, M. Ghomashi, F. Bertazzi, M. Goano, M. Vallone, and G. Ghione, "Plasmonic-organic hybrid electro/optic Mach-Zehnder modulators: from waveguide to multiphysics modal-FDTD modeling," *Opt. Express*, vol. 28, no. 20, p. 29253, Sep. 2020, doi: 10.1364/OE.402427.
+- [8] U. Koch *et al.*, "A monolithic bipolar CMOS electronic–plasmonic high-speed transmitter," *Nat. Electron.*, vol. 3, no. 6, pp. 338–345, Jun. 2020, doi: 10.1038/s41928-020-0417-9.
+- [9] L. Kulmer, T. Blatter, M. Kohli, Y. Horst, S. M. Koepfli, and J. Leuthold, "Single Carrier net 400 Gbit/s IM/DD over 400 m Fiber enabled by Plasmonic Mach-Zehnder Modulator," in *Optical Fiber Communication Conference (OFC) 2024*, San Diego California: Optica Publishing Group, 2024, p. W4H.5. doi: 10.1364/OFC.2024.W4H.5.
+- [10] T. Blatter *et al.*, "Plasmonic Ring Resonator Modulator Demonstrating IM/DD >400G per lane," 2024.
+- [11] J. Zhou, J. Zhang, S. Hu, Z. Xu, B. Xu, and K. Qiu, "Identification and Mitigation of Burst Errors for Partial Response Equalization in 256-Gb/s Intra-DCIs," *J. Light. Technol.*, vol. 43, no. 14, pp. 6563–6569, Jul. 2025, doi: 10.1109/JLT.2025.3565851.
+- [12] M. Eppenberger *et al.*, "Resonant plasmonic micro-racetrack modulators with high bandwidth and high temperature tolerance," *Nat. Photonics*, vol. 17, no. 4, pp. 360–367, Apr. 2023, doi: 10.1038/s41566-023-01161-9.
+- [13] F. Pittala, H. Louchet, and A. Ostrovskis, "448 Gbps Transmissions based on PAM4/6/8," in *2025 IEEE Photonics Society Summer Topicals Meeting Series (SUM)*, Berlin, Germany: IEEE, Jul. 2025, pp. 1–2. doi: 10.1109/SUM65312.2025.11121769.
+- [14] W. Heni *et al.*, "Plasmonic PICs Terabit Modulation on the Micrometer Scale," 2022.
+- [15] E. Timurdogan, C. M. Sorace-Agaskar, J. Sun, E. Shah Hosseini, A. Biberman, and M. R. Watts, "An ultralow power athermal silicon modulator," *Nat. Commun.*, vol. 5, no. 1, p. 4008, Jun. 2014, doi: 10.1038/ncomms5008.

@@ -1,0 +1,87 @@
+PCIe-over-Optics with OSFP DR8 LPO and an Optical Circuit Switching Fabric for Composable CPU-GPU Resource Pooling
+Peng Wang 1 , Sai Chen 1 , Rui Lu 1 , Yazhu Lan 1 , Qingxu Li 1 , Qin Chen 1 , Liang Dou 1 , Zhiping Yao 2 , Binzhang Fu 1 , Yuanchao Su 1 , Qingwen Zeng 3 , Xinyang Chen 3 
+(1) Alibaba Cloud Computing, Hangzhou, China, (2) Alibaba Cloud Computing, Sunnyvale, United States, (3) Ruijie Networks, Fuzhou, China paul.wp@alibaba-inc.com
+Abstract: We experimentally demonstrate PCIe5.0-over-optics interconnects using standard OSFP DR8 LPO modules. The x16 PCIe link achieve 100m error-free transmission. System-level benchmarking including dynamic OCS fabric validates the feasibility of composable CPU-GPU resource pooling. © 2026 The Author(s)
+1. Introduction
+Large-scale artificial intelligence (AI) models now surge to an order of trillion parameters. As scaling law continues, training clusters are trending toward ultra-large-scale deployments comprising hundreds of thousands of accelerator nodes [1-2]. In conventional AI servers, heterogeneous CPUs and GPUs are tightly coupled and interconnected through a PCI Express (PCIe) I/O fabric. However, as cluster sizes continue to grow, this monolithic server architecture faces several fundamental limitations:
+1) Limited PCIe interconnect reach and lack of compatibility with mainstream Ethernet optics: Native PCIe 5.0 electrical links are restricted to about 1 m [3, 4], and retimers can extend passive copper cables to roughly 7 m [5], while inter-rack AI fabrics typically require link spans of tens of meters. However, existing PCIe-specific optical modules (e.g., MCIO/OCuLink AOC) are not compatible with widely deployed Ethernet optics, preventing reuse of the established optical ecosystem (transceivers, supply chains, qualification) and associated economies of scale.
+2) Static resource coupling versus dynamic workload demands and component failures: Mainstream servers enforce fixed CPU-GPU ratios (e.g., 2-CPU:8-GPU), treating each node as a rigid resource pool. In practice, workloads require diverse compositions (e.g., 1-CPU:8-GPU or 2-CPU:4-GPU, see Fig. 1(a)), leading to underutilization of either CPUs or GPUs. Moreover, failure of any component (CPU or GPU) typically forces the entire node offline, precluding component-level replacement and causing significant resource waste (see Fig. 1(b)), thereby degrading system efficiency and reliability.
+To address these issues, we design and experimentally validate an x16 PCIe 5.0-over-Optics interconnect based on standard OSFP DR8 linear pluggable optics (LPO) modules. This architecture overcomes the reach limitations of copper-based PCIe links while preserving ecosystem compatibility and cost efficiencies, and is forward-compatible with PCIe 6.0/7.0 and beyond. Experiments demonstrate error-free operation across all x16 PCIe lanes over 100 m transmission, extending reach by more than two orders of magnitude relative to native electrical links. We further conduct comprehensive benchmarking—including link throughput, end-to-end latency, and application-level performance (ResNet-50 training)—and experimentally validate a dynamic optical circuit-switching (OCS) fabric for composable CPU-GPU interconnection, showing negligible performance impact. Overall, the proposed approach provides a practical pathway toward scalable, efficient, and composable CPU-GPU resource pooling.
+Fig. 1. A training cluster comprising N servers, each configured with 2 CPUs and 8 GPUs. (a) Under dynamic workload variation, Server 1 has one idle CPU, whereas Server N has four idle GPUs. (b) Under component failures, a failed CPU in Server 1 renders four GPUs idle, while a failed GPU in Server N leaves one CPU and three GPUs idle.
+Fig. 2. (a) The PCIe-optical interface card integrating a PCIe 5.0 retimerand two OSFP cages, compatible with OSFP DR8 LPO modules. (b) Experimental setup with a 10~100 m fiber link. (c) Typical optical and electrical eye diagrams at the LPO transmitter. (d) Electrical eye diagrams for all eight lanes at the retimer receiver. (e) The CPU-GPU interconnect bandwidth (x8) and RTT versus distance over 10~100m.
+2. Physical-layer Validation of PCIe 5.0-over-Optics with OSFP DR8 LPO 
+To carry PCIe 5.0 traffic overstandard OSFP DR8 LPO modules, it requires to conveying PCIe sideband signaling across the optical domain. We address this by implementing a PCIe-optical interface card that integrates a PCIe Gen5 retimer to regenerate the high-speed lanes and manage sideband signals (Fig. 2(a)). To minimize system complexity, the design preserves only three essential PCIe sideband signals: REFCLK± (reference clock), PERST# (global reset), and PRSNT# (presence detect) [6]. The card provides two OSFP ports, each configured as x8 lanes, enabling an aggregate x16 PCIe link on a single adapter.It is compatible with standard 800G OSFP DR8 LPO modules (Fig. 2(a)) and support the PCIe 5.0 signaling rate of 32 Gb/s per lane. Note that, the LPO physical layer is transparent to signal data rate and supports up to 112 Gb/s per lane. For evaluation, identical retimer cards are installed at the Root Complex (RC) and Endpoint (EP) [6]. Four OSFP modules interconnect the two cards to form a point-to-point bidirectional optical link, realizing a complete high-speed PCIe 5.0-over-optics interconnect for performance measurement (Fig. 2(b)).
+At 32 Gb/sper lane (PCIe 5.0) over a 100 m optical path, the end-to-end BER across all 16 lanes was below the measurement limit. No CRC errors were observed during continuous iperf testing exceeding 48 hours, meeting the physical-layer error-rate targets of the PCIe 5.0 specification. Representative optical and electrical eye diagrams at the LPO transmitter are shown in Fig. 2(c), and electrical eye diagrams for all eight lanes at the retimer receiver are shown in Fig. 2(d). The worst-case eye width and height are 0.384 UI and 288 mV, well above the PCIe 5.0 eye-mask requirements, confirming robust signal integrity. As PCIe Gen6 (and beyond) GPUs are not yet
+commercially available, higher per-lane data rates were not evaluated in this study.The CPU-to-GPU (CtoG) and GPU-to-CPU (GtoC) bandwidth, round-trip time (RTT) is measured as shown in Fig. 2(e). For optical distance up to 40 m, the CtoG and GtoC bandwidths in the remote configuration are almost identical from the local electrical baseline, while throughput begins to roll offwith increasing distance beyond 40m. Although PCIe links are nominally symmetric and full duplex, mild directional asymmetry is often observed in practice due to differences in host memory read/write behavior [8]. For reaches up to 100 m, the end-to-end CPU- GPU RTT remains below 2.5 µs, comprising ~0.8 µs from the local baseline (including internal CPU/GPU memory transactions), ~0.7 µs from the retimer and switch chips, and ~1.0 µs from fiber propagation.
+3. Performance Benchmarking Including Dynamic OCS Fabric 
+We further evaluate the model-level performance of the PCIe-over-optics interconnect together with a dynamically reconfigurable OCS fabric. In a proof-of-concept setup, two CPUs and two GPUs are interconnected via 10~100 m optical links through the OCS. Each OSFP DR8 port is fanned out via an MPO16 - 8x Duplex LC fiber to connect with the OCS, enabling lane-granular circuit switching and flexible topology reconfiguration. System performance is compared between a local electrical baseline and remote composable configurations. For local baseline, CPUs and GPUs are directly connected on the motherboard via electrical PCIe traces, and no optical components are used. In
+Fig. 3. (a) Experimental setup: CPUs and GPUs are interconnected via 10~100 m fiber through an OCS configured for (i)direct point-to-point paths (dotted) and (ii) cross-connects that compose idle CPU-GPU pairs across servers (solid). (b) ResNet-50 training throughput before and after OCS reconfiguration at different batch sizes.
+the remote case, endpoints are interconnected through 10~100 m fiber and an OCS, configured as: 1) direct point-to-point paths, and 2) cross-connects that compose idle CPU-GPU pairs across servers (e.g., pairing an idle CPU on one server with idle GPUs on another), as shown in Fig. 3(a).
+The end-to-end training throughput is evaluated using ResNet-50 [7] before and after OCS fabric reconfiguration of CPU-GPU connectivity to quantify any performance impact. ResNet-50, a 50-layer residual convolutional neural network widely adopted for image classification, serves as the application benchmark. Batch size is a key parameter for both training and inference, and we evaluate performance across batch sizes of16,32, 64, 128, and 256. Figure 3(b) shows that, for GPU attachments over fiber links ≤100 m, ResNet-50 training throughput deviates by less than 2.5% from the local electrical baseline across all batch sizes, under both point-to-point and cross-connected OCS configurations. Note that, the minor improvements over local performance in some remote cases fall within the normalvariance range of GPU performance.
+The measured training throughput is unaffected by OCS-path reconfiguration and remains comparable to the local electrical baseline, thereby validating the feasibility of a dynamically reconfigurable, OCS-based optical interconnect for composable CPU-GPU resource pooling. Currently, the PCIe protocol does not support hot plug/hot-reset across the OCS fabric. Following each OCS path reconfiguration, the PCIe stack currently requires a host power cycle to retrain the link and complete re-enumeration and address reassignment. Enabling reboot-free reconfiguration (e.g., via PCIe hot-plug) is left to future work. In practice, topology changes in composable CPU- GPU pools are infrequent, and the switching performance of current commercial OCS devices is sufficient to meet operational requirements.
+4. Summary 
+This work demonstrates the feasibility of carrying PCIe 5.0 traffic overcommodity OSFP DR8 LPO optics while preserving application-level performance comparable to local electrical baselines. The architecture is forward-compatible with future PCIe generations (Gen6, Gen7, and beyond). When integrated with an OCS fabric, it enables rack-scale dynamic composition of CPU-GPU resources without performance degradation. These results indicate strong deployment potential for composable CPU-GPU resource pooling.
+References 
+[1] K. Qian, Y. Xi, J. Cao, J. Gao et al, ACM SIGCOMM '24, Sydney, NSW, Australia,2024.
+[2] Z. Jiang, H. Lin, Y. Zhong, Q. Huang et al, Santa Clara, CA, USA, 2024.
+[3] J. Kim et al., IEEE International Symposium on Electromagnetic Compatibility (EMC), 2020.
+[4] R. Zhang et al., IEEE CPMT Symposium on Advanced Packaging, 2021.
+[5] T. Lee et al., IEEE International Solid-State Circuits Conference (ISSCC) Workshop, 2022.
+[6] https://pcisig.com/pci-express-card-electromechanical-specification-revision-51-version-10-cb.
+[7] He, K et al., in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), 2016, pp. 770–778.
+[8] https://docs.nvidia.com/cuda/cuda-c-programming-guide.
+PCIe-over-Optics with OSFP DR8 LPO and an Optical Circuit Switching Fabric for Composable CPU-GPU Resource Pooling 
+Peng Wang1, Sai Chen1 , Rui Lu1, Yazhu Lan1, Qingxu Li1, Qin Chen1, Liang Dou1, Zhiping Yao2, Binzhang Fu1 , Yuanchao Su1, Qingwen Zeng3, Xinyang Chen3
+(1) Alibaba Cloud, Hangzhou, China, (2) Alibaba Cloud, Sunnyvale, United States, (3) Ruijie Networks, Fuzhou, China
+Introduction 
+PCIe 5.0 x16 over standard OSFP DR8 LPO (no proprietary PCIe optics)
+100 m error-free transmission across all 16 lanes @ 32 Gb/s/lane
+< 2.5 µs CPU–GPU RTT at 100m, with ~1.0 µs fiber propagation component
+OCS-enabled composable CPU–GPU pooling with <2.5% ResNet-50 throughput delta vs local baseline
+Practical path compatible with Ethernet optical ecosystem and forward compatible to PCIe Gen6/Gen7 and beyond
+Problem & Motivation 
+Why composable CPU–GPU pools?
+AI training clusters are scaling to massive sizes; fixed server configurations (e.g., 2 CP U : 8 GPU) cause:
+Resource underutilization under dynamic workload mixes (idle CPUs or GPUs)
+Failure amplification: one failed component can idle multiple healthy devices Why optics for PCIe?
+Native PCIe 5.0 electrical reach ~1m
+Retimers extend copper to ~7m
+Rack-scale composition needs tens of meters
+Existing PCIe optical solutions often don't reuse mainstream Ethernet optics (ecosystem/cost/qualification)
+Goal: Extend PCIe reach to rack-scale using commodity OSFP optics, and enable dynamic connectivity via optical circuit switching (OCS)
+Solution 
+Architecture: PCIe 5.0-over-Optics with OSFP DR8 LPO
+A PCIe–optical interface card integrates:
+PCIe Gen5 retimer (lane regeneration + sideband management)
+Two OSFP cages, each configured as x8, forming x16 aggregate
+Preserve only 3 essential PCIe sideband signals across optics:
+REFCLK±, PERST#, PRSNT#
+Uses standard 800G OSFP DR8 LPO modules
+LPO is rate-transparent; supports up to 112 Gb/s/lane at the PHY
+Add-on: Dynamic OCS fabric for composability
+Fan out OSFP DR8 via MPO16 → 8× duplex LC into an OCS
+Enables:
+Direct point-to-point paths
+Cross-connect paths to pair idle CPU and GPUs across servers
+Lane-granular circuit switching for flexible topology reconfiguration
+Results 
+1、Overall Insights
+Built a PCIe 5.0 x16 over optics link using standard OSFP DR8 LPO modules and retimer cards
+Achieved error-free operation over 100m across all 16 lanes
+Measured <2.5 µs CPU–GPU round-trip latency at 100m, with throughput close to local baseline at short reaches
+2、Application-Level Benchmark (ResNet-50)
+Setup: PCIe-over-optics CPU–GPU links (10–100 m) via reconfigurable OCS (point-to-point / cross-connect)
+Metric: Training throughput (samples/s), batch size 16–256, compared against local baseline to local baseline
+Key result: Throughput deviation is ≤2.5% from baseline and remains stable before/after OCS reconfiguration
+Note: OCS path changes currently require PCIe retraining (power cycle) 
+Conclusion 
+100m PCIe-over-optics: PCIe 5.0 x16 @ 32 Gb/s/lane over standard OSFP DR8 LPO achieved error-free operation (BER below limit) with 48+ hours testing and no CRC errors
+Low latency: CPU–GPU RTT < 2.5 µs at 100m
+OCS composability validated: With dynamic OCS reconfiguration (point-to-point / cross-connect), ResNet-50 throughput stays within 2.5% of the local electrical baseline across batch sizes
+References 
+[1] K. Qian, Y. Xi, J. Cao et al, ACM SIGCOMM '24, Sydney, NSW, Australia, 2024.
+[2] Z. Jiang, H. Lin, Y. Zhong, Q. Huang et al, Santa Clara, CA, USA, 2024.
+[3] J. Kim et al., IEEE International Symposium on EMC, 2020.
+[4] R. Zhang et al., IEEE CPMT Symposium on Advanced Packaging, 2021.
+[5] T. Lee et al., IEEE ISSCC Workshop, 2022.
+[6] https://pcisig.com/pci-express-card-electromechanical-specification-revision-51 version-10-cb..

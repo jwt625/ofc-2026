@@ -1,0 +1,75 @@
+# Auto-allocating OCS Based on Real Time Flow-granularity Controller for LM Training
+
+Liang Gao,<sup>1</sup> Shikui Shen,<sup>2</sup> Jiameng Pan,<sup>3</sup> Fengtao Chen,<sup>4</sup> Siyi Liao,<sup>4</sup> Wei Chen,<sup>3</sup> Huiqin Liu,<sup>1</sup> Wenzhe Li,<sup>5</sup> Yakun Hu,<sup>2</sup> Bowen Han,<sup>2</sup> Runing Wang,<sup>3</sup> Bingli Guo,<sup>1</sup> Xiongyan Tang,<sup>2</sup> Shanguo Huang,<sup>1</sup> and Xuwei Xue1,\*
+
+*<sup>1</sup>Beijing University of Posts and Telecommunications Institute of Information Photonics and Optical Communications , Beijing, China (Email: [x.xue@bupt.edu.cn\)](mailto:x.xue@bupt.edu.cn) <sup>2</sup>China Unicom Research Institute, Beijing, China 3 Infrawaves, Beijing, China <sup>4</sup>China United Network Communications Group Co.Ltd.Shanghai, China, Shanghai, China 5 Institute of Computing Technology Chinese Academy of Sciences, Beijing, China*
+
+Abstract: We present a per-flow controlling system for an O/E hybrid network that decreases All-Reduce time by 50.3% and increases bandwidth-utilization by 47.1%, delivering faster LM training than all-electrical network with a 32.14% reduction in powerconsumption. © 2026 The Author(s)
+
+### 1. Introduction
+
+Scaling up the parameters of models has emerged as a promising approach for the enhancement of model performance in various domains [\[1\]](#page-2-0). Meanwhile, strict communication requirements arise from this approach. As the activation parameter rises while Moore's Law fades, the switching capacity of electrical packet switching (EPS) faces communication bottleneck [\[2,](#page-2-1) [3\]](#page-2-2). Optical circuit switching (OCS) [\[4,](#page-2-3) [5\]](#page-2-4) offers an energy-efficient way that bypass per-packet routing and queuing inside the fabric, providing protocol-agnostic, line-rate transmission property. However, Google's deployments [\[6,](#page-2-5) [7\]](#page-2-6) employ OCS for block/per-job topology reconfiguration, so within a training phase it functions as a rack rather than an active switching. This is due to the job-centric controller [\[8,](#page-2-7) [9\]](#page-2-8) that lacks fine-granularity visibility and enforcement.
+
+In this paper, we present a fine-granularity controller that derives hot traffic flow (hot flow) from the parallelism strategy, auto-allocates dedicated OCS paths, and performs real time per-flow scheduling with non-convergence forwarding bandwidth. The proposed controller proceeds in three phases. First, it collects server's node information (parallelism configuration) to predict hot flow peer. Second, it computes per-flow routes, port assignments and allocates direct OCS paths for the hot flow. Third, during execution on the EPS, it detects the targeted hot flows and redirects them in real time onto the provisioned paths, while ensuring non-convergence routing. We validate the per-flow controller system on a hybrid optical–electrical (O/E) network by replacing part of the spine switches with OCS. OCS serves as the data-plane policy enforcement by establishing dedicated optical path and forwarding hot flow rather than merely providing reconfigurable connectivity for coarse per-job placement. Placing the OCS at the spine layer also aligns with the low routing entropy and high predictability properties of the aggregation traffic, which well fit circuit switching's characteristic that data is exchanged over dedicated links. This placement also reduces overall power consumption compared with an all-electrical network.
+
+We built a real-world testbed to demonstrate the performance of the proposed O/E controller system, incorporating four Atlas 910B computing nodes and a MEMS-based OCS. Objective comparison is ensured by using randomly selected tests from multiple repetitions under identical settings. We achieve the All-Reduce time reduced by 50.3% while the bandwidth utilization increased by 47.1% comparing with the jobs-centric controllers. We also exceed the LM training iteration time by 0.32% over the industry mainly utilizing all-electrical network and reduced power consumption by 32.14%.
+
+<span id="page-0-0"></span>![](_page_0_Figure_10.jpeg)
+
+Fig. 1: (a) Structure of the proposed controller system in the O/E network. (b) Real world testbed of the system.
+
+## 2. Per-Flow Controller System
+
+Fig. [1\(](#page-0-0)a) illustrates the deployment of the proposed per-flow O/E control system within the O/E hybrid network, where a portion of the spine switches is replaced by MEMS-based OCS devices. The system comprises three coordinated planes: Perceiver, Scheduler, and Conductor, co-designed for efficient hot flow routing. Hot flows are defined as those with the largest per-transfer volume (e.g., parameter synchronization in data-parallel training, which is generally implemented via All-Reduce.).
+
+During the model deployment phase (solid arrows), the Perceiver collects the servers' local information and reports them to the Scheduler, which predicts hot flows and computes routing path for the Conductor to allocate the corresponding optical paths. During the model training phase (dashed arrows), the Perceiver monitors realtime traffic, identifies hot flows according to the Scheduler's signatures, and performs traffic dominating in real time.
+
+### *2.1. Model Deployment Phase*
+
+In the deployment phase, the controller identifies hot-traffic flows from distributed parallel strategies and establishes the corresponding optical paths, as shown in Fig. [2\(](#page-1-0)a). The Perceiver collects local information and parallelism strategies from all servers, providing the foundation for global scheduling. Based on the Perceiver's reports, the Scheduler executes two stages of computation: node computation (NC) and path computation (PC).
+
+Given the Perceiver's reports, the NC aggregates nodes into global ranks and associates each rank with the communication-ID tuple assigned by the distributed parallel strategies. This reconstruction yields a global traffic view where hot flow groups can be predicted. Once the global hot flow groups are identified, the NC maps the participating nodes group back to their local representations as GPU-tuples, forming the local hot flow groups (local-ranks) for the following PC computation.
+
+The PC proceeds in two steps. First, it determines intra-server data paths by binding GPUs to NICs according to the host-reported affinity information. Then, leveraging the identified NICs, the PC determines their associated leaf switches from the LLDP neighbor table and applies the predefined O/E interface map to bind the corresponding leaf uplinks to OCS ports, thereby establishing the inter-server paths. Together with the previously defined intraserver paths, these connections form the complete global logical topology. The Conductor enforces the logical topology derived by the Scheduler by issuing out-of-band control commands to the OCS, stitching the source and destination leaf interfaces into dedicated optical circuits.
+
+# *2.2. Model Training Phase*
+
+During training, the Perceiver continuously monitors real-time traffic and identifies hot flows based on its signatures (source–destination IP and transfer's volume pairs) provided by the Scheduler. Upon detection, the Perceiver notifies the Conductor, which applies real-time traffic redirection on the EPS. By updating the EPS's routing table through modifying the "next-hop" entries, controller achieves per-flow scheduling by redirecting these flows onto the pre-provisioned OCS paths.
+
+However, due to the inherent characteristics of circuit switching, OCS faces bandwidth limitations when replacing spine switches—a phenomenon we term bandwidth pinning. As illustrated in Fig[.2\(](#page-1-0)b), the replacement of OCS has reduced the uplink bandwidth of leaf switches from 1.6T to 0.8T. Once a leaf uplink is assigned to an OCS circuit, its bandwidth becomes pinned to a fixed source–destination pair and can no longer be utilized with other flows. As a result, the overall available bandwidth is lower compared to the all-electrical packet switching architecture. We embed traffic engineering (TE) into the per-flow controller to mitigate bandwidth pinning in real time. For each hot flow, a per-flow ECMP group is configured in the EPS with both the OCS ingress and the EPS spine uplinks as equal-weight members (Fig. [2\(](#page-1-0)c)). As a result, hot flow is no longer confined to the pre-provisioned optical paths but can also be forwarded via the EPS, thereby increasing the effective available bandwidth while ensuring that the forwarding bandwidth does not converge.
+
+<span id="page-1-0"></span>![](_page_1_Figure_12.jpeg)
+
+Fig. 2: (a) Controller structure. (b) Explanation of bandwidth pinning. (c) Demonstration of routing-table.
+
+<span id="page-2-9"></span>![](_page_2_Figure_2.jpeg)
+
+Fig. 3: (a) CDF of iteration time between job-centric and per-flow controller. (b) Per-flow port-level traffic monitor (c) Job-centric port-level traffic monitor. (d) Hccl-test. (e) CDF of iteration time between all-electrical and O/E hybrid network. (f) O/E hybrid port-level traffic monitor. (g) All-eletrical port-level traffic monitor. (h) Power consumption.
+
+### 3. Experiments
+
+As shown in Fig. [1\(](#page-0-0)b), the testbed has four Atlas 900 RCK servers equipped with 8×910B NPUs. Each server uplinks to one Mercury MS6426-64D 400 GbE leaf layer switch. In the spine layer, one EPS is replaced by a Polatis 7000-series 32×32 MEMS based OCS. To validate effectiveness in real LM training, we train LLaMA-2 70B under 32-way parallelism (2 DP × 2 PP × 8 TP) and evaluate performance by measuring its average iteration time. The controller runs on a dedicated host, with telemetry and commands carried over a 5960X-56QU-HF management switch.
+
+We first compare the proposed per-flow controller with the current job-centric baseline. As illustrated in Fig[.3\(](#page-2-9)a), the per-flow controller reduces iteration time by 551 ms on average and delivers a 1.38% speedup, which will increase with model scale as communication accounts for a larger fraction of the iteration time. We also decrease the All-Reduce duration time by 50.3% (Fig[.3\(](#page-2-9)b) and improve bandwidth-utilization by 47.1% (Fig[.3\(](#page-2-9)c)). HCCL-Test is an open source tool that evaluates network performance. We evaluated on a two-node testbed comparing the per-flow controller with a job-centric controller as shown in Fig[.3\(](#page-2-9)d). The result demonstrates that the proposed approach significantly improves network performance by ensuring non-convergence bandwidth for hot flows forwarding.
+
+We then compare the designed O/E hybrid network with the controller with the all-electrical network prevalent utilized in industrial area. Fig[.3\(](#page-2-9)e) demonstrates that the O/E controller system achieves 0.32% performance improvement over all-electrical network. Since All-Reduce communication is sensitive to bandwidth, the latency remains essentially unchanged(Fig[.3\(](#page-2-9)f)) while the link utilization increases by 50.0% (Fig[.3\(](#page-2-9)g)) with the designed controller. Furthermore, the proposed O/E network reduces power consumption by 32.14%, as shown in Fig. [3\(](#page-2-9)h), which represents a significant improvement given the high energy cost of AI training workloads.
+
+# 4. Conclusion
+
+We introduce, to our knowledge, the first per-flow O/E controller system for accelerating LM training and deploy OCS as the data-plane policy enforcement in a hybrid O/E network. Our approach yields significant hot flow efficiency gains compared with current job-centric controllers. Against the all-electrical packet-switched fabrics that dominate industry practice, it delivers notable power savings while improving training performance.
+
+## Acknowledgments
+
+*This work was supported in part by the National Key R&D Program of China (Grant No. 2024YFB2908303), in part by the National Natural Science Foundation of China (62220106002, 62125103, 62171059, 62401082), and by the BUPT–China Unicom Joint Innovation Center.*
+
+## <span id="page-2-0"></span>References
+
+- 1. F. Liang, et al., *arXiv:2404.06114* (2024).
+- <span id="page-2-1"></span>2. X. Xue, et al., *IEEE Trans. Commun.* 70(5), 3310–3319 (2022).
+- <span id="page-2-2"></span>3. S. Das, et al., *ACM SIGCOMM*, 1117–1119 (2023).
+- <span id="page-2-3"></span>4. P. Bakopoulos, et al., *OFC*, M2G.1 (2024).
+- <span id="page-2-4"></span>5. C. Liang, et al., *ACM SIGCOMM*, 415–432 (2024).
+- <span id="page-2-5"></span>6. L. Poutievski, et al., *ACM SIGCOMM*, 66–85 (2022).
+- <span id="page-2-6"></span>7. Y. Zu, et al., *NSDI*, 761–774 (2024).
+- <span id="page-2-7"></span>8. S. Rajasekaran, et al., *NSDI*, 1403–1420 (2024).
+- <span id="page-2-8"></span>9. K. Xu, et al., *NSDI*, 999–1014 (2025).

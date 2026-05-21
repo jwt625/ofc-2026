@@ -263,10 +263,144 @@
             vertical-align: middle;
             margin-right: 5px;
         }
+        :root {
+            color-scheme: dark;
+            --bg: #0c0f12;
+            --panel: #12171d;
+            --panel-2: #171e25;
+            --line: #26313c;
+            --text: #e7edf3;
+            --muted: #94a3b3;
+            --soft: #c6d1dc;
+            --accent: #6ad7c9;
+            --accent-2: #f0b85a;
+        }
+        * {
+            border-radius: 0 !important;
+        }
+        body {
+            background: var(--bg) !important;
+            color: var(--text);
+        }
+        .container,
+        .zoom-controls,
+        .filter-controls,
+        .tooltip {
+            background: var(--panel) !important;
+            color: var(--text);
+            border: 1px solid var(--line);
+            box-shadow: none;
+        }
+        h1,
+        h2,
+        p,
+        .legend,
+        .tooltip .count,
+        .tooltip .example-presenter,
+        .tooltip .example-abstract,
+        #zoom-level {
+            color: var(--soft) !important;
+        }
+        h1 {
+            color: var(--text) !important;
+        }
+        .site-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 0 18px;
+        }
+        .site-nav a {
+            color: var(--text);
+            background: var(--panel-2);
+            border: 1px solid var(--line);
+            padding: 8px 10px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .site-nav a:hover,
+        .site-nav a.active {
+            color: #061014;
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        .matrix-container {
+            border-color: var(--line) !important;
+            background: #0a0d10;
+        }
+        th {
+            background: #1f6f5f !important;
+            color: var(--text) !important;
+            border-color: var(--line);
+        }
+        th.row-header,
+        th.clickable:hover,
+        th.sorted {
+            background: #225a78 !important;
+        }
+        td,
+        th {
+            border-color: var(--line) !important;
+        }
+        td.row-header {
+            background: #15202a !important;
+            color: var(--text);
+        }
+        td.row-header:hover,
+        td.row-header.sorted {
+            background: #203344 !important;
+        }
+        .filter-btn,
+        .zoom-btn {
+            background: var(--panel-2) !important;
+            color: var(--text) !important;
+            border: 1px solid var(--line) !important;
+        }
+        .filter-btn.active,
+        .filter-btn:hover,
+        .zoom-btn:hover {
+            background: var(--accent) !important;
+            color: #061014 !important;
+            border-color: var(--accent) !important;
+        }
+        .cell:hover {
+            background: var(--accent-2) !important;
+            color: #090b0d !important;
+        }
+        .cell-0 { background-color: #0f1317 !important; color: #43515f !important; }
+        .cell-1 { background-color: #143126 !important; color: #d7eee8; }
+        .cell-2 { background-color: #1d4a38 !important; color: #e7f6f1; }
+        .cell-3 { background-color: #28644c !important; color: #f1fbf8; }
+        .cell-4 { background-color: #347f62 !important; color: #f6fffc; }
+        .cell-5 { background-color: #429a78 !important; color: #061014; }
+        .cell-high { background-color: var(--accent) !important; color: #061014 !important; }
+        .legend-box {
+            border-color: var(--line) !important;
+        }
+        .tooltip.pinned {
+            border-color: var(--accent);
+        }
+        .tooltip .example {
+            background: var(--panel-2);
+            border-left-color: var(--accent);
+        }
+        .tooltip h3,
+        .tooltip .example-code,
+        .tooltip .example-abstract.collapsed::after,
+        .tooltip .example-abstract.expanded::after {
+            color: var(--accent) !important;
+        }
+        .tooltip .example-title {
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <nav class="site-nav" aria-label="Site navigation">
+            <a class="active" href="./index.html">Institution Matrix</a>
+            <a href="./ofc_browser/">Paper Browser</a>
+        </nav>
         <h1>OFC 2026 Conference Analysis</h1>
         <h2 style="text-align: center; color: #666;">Institutions × Emerging Technical Topics (Expanded Coverage)</h2>
         <p style="text-align: center; color: #888; font-size: 0.9em;">

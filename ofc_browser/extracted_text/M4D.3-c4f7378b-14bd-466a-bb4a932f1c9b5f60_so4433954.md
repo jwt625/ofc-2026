@@ -1,0 +1,70 @@
+# **High L-band Responsivity of Compact InP-on-Si Coherent-Receiver PICs via Chip-on-Wafer Bonding**
+
+**Takuya Okimoto1,2,4,5\*, Takuya Mitarai1,2,4 , Yohei Sobu1,3 , Shuntaro Maeda<sup>5</sup> , Shun Kimura1,2 , Takehiko Kikuchi1,2,4 , Naoko Inoue1,2,4 , Naoki Fujiwara1,2,4 , Nobuhiko Nishiyama1,4 , Takuo Tanemura<sup>5</sup> , Shinsuke Tanaka1,3 , and Hideki Yagi1,2,4**
+
+*<sup>1</sup> Photonics Electronics Technology Research Association (PETRA) 1-20-10, Sekiguchi, Bunkyo-ku, Tokyo, 112-0014, Japan <sup>2</sup> Sumitomo Electric Industries, Ltd., 1, Taya-cho, Sakae-ku, Yokohama, Kanagawa, 244-8588, Japan <sup>3</sup> 1finity Inc., 4-1-1, Kamikodanaka, Nakahara-ku, Kawasaki, Kanagawa 211-0053, Japan 4 Institute of Science Tokyo, 2-12-1, O-okayama, Meguro-ku, Tokyo, 152-8550, Japan <sup>5</sup> The University of Tokyo, 7-3-1 Hongo, Bunkyo-ku, Tokyo 113-8656, Japan \* okimoto-takuya@sei.co.jp*
+
+**Abstract:** We demonstrate high L-band responsivity in compact InP-on-Si coherent-receiver PICs, each with a footprint of only 1.2 mm<sup>2</sup> . A receiver module using these PICs exhibits robust back-toback OSNR tolerance for dual-polarization 100-GBaud 16-QAM signals.
+
+### **1. Introduction**
+
+To accommodate the rapid growth of optical-fiber transmission capacity, spectrum expansion with wavelengthdivision multiplexing (WDM) is as important as symbol-rate scaling [1]. In digital coherent transmission networks, C+L multiband operation has become more common in long-haul transmission and is spreading to shorter links, such as metro and data-center interconnects (DCIs) [2]. These trends are driving demand for compact coherent transceivers supporting the L-band (1565 nm to 1612 nm).
+
+To meet this demand, coherent-receiver photonic integrated circuits (PICs) are required to exhibit high Lband responsivity and a small footprint. From a fabrication perspective, two integration platforms—silicon (Si) and indium phosphide (InP)—are widely used to integrate 90° hybrids and waveguide photodiodes (PDs). Owing to the high refractive-index contrast of Si waveguides, Si PICs support tight-bend routing that reduces the footprint of passive devices and enables compact 90°-hybrid layouts [3]. However, standard germanium (Ge) PDs in Si PICs typically show reduced responsivity toward the L-band and often require band-edge engineering, e.g., the Franz-Keldysh effect or tensile strain. By contrast, InP PICs provide high L-band responsivity via InGaAs PDs, but the low refractive-index contrast of InP-based waveguides increases minimum bend radius, keeping the PIC footprint large [4-5]. These contrasts reveal a platform-level trade-off between L-band responsivity and compact footprint. To resolve this tradeoff, we have developed an InP-on-Si platform using a chip-on-wafer (CoW) bonding technique [6-7]. In this platform, InGaAs PDs with high L-band responsivity can be heterogeneously integrated with a compact Si 90° hybrid. Although prior work has demonstrated InGaAs PDs on Si-on-insulator (SOI) [8], to the best of our knowledge, the heterogeneous integration of InGaAs PDs and a Si 90° hybrid for L-band intradyne coherent receivers (ICRs) has not been reported.
+
+In this paper, we report compact InP-on-Si coherent-receiver PICs for the L-band that integrate a Si 90° hybrid and four InGaAs PDs within a 1.2-mm<sup>2</sup> footprint. Thanks to their high L-band responsivity, an ICR using these PICs demonstrates robust optical signal-to-noise ratio (OSNR) tolerance in back-to-back experiments at 1600 nm with a dual-polarization (DP) 100-GBaud 16-QAM (800 Gb/s) signal.
+
+### **2. Device Structure and Characteristics**
+
+Fig. 1(a) and (b) show a photomicrograph and a schematic of an InP-on-Si PIC. Four InGaAs PDs are integrated with a Si 90° hybrid comprising a 4×4 multimode interference (MMI) coupler on SOI. The four PDs are connected to the MMI output ports, arranged as two balanced pairs for the in-phase (I) and quadrature (Q) channels. Two edge couplers
+
+![](_page_0_Figure_12.jpeg)
+
+Fig. 1. (a) Photomicrograph and (b) schematic of an InP-on-Si coherent-receiver PIC, and (c) schematic of an InGaAs PD heterogeneously integrated on SOI.
+
+for signal and local oscillator (LO) light are connected to two MMI input ports. The waveguides connecting the MMI to the PDs are matched in insertion loss to minimize inter-channel responsivity imbalances, thereby enhancing the common-mode rejection ratio (CMRR). Thanks to tight bends allowed by the high refractive-index contrast of Si waveguides, the PIC footprint is only 1.0×1.2 mm², which is less than 20% of that of our previous InP PICs [5].
+
+In our platform, InP-on-Si PICs are fabricated through the following steps: (i) growth of epitaxial layers on an InP wafer and dicing into chips, (ii) CoW hydrophilic direct bonding onto Si PIC on an SOI wafer, (iii) removal of the InP substrate by chemical-mechanical polishing (CMP) and selective wet etching, leaving the InP-based epitaxial layers on the SOI wafer, and (iv) formation of InP-based active devices by standard InP processes, including photolithography and dry etching [6]. This procedure preserves the as-grown epitaxial quality on InP wafers, in contrast to direct InP-on-Si heteroepitaxy. In addition, patterning the InP-based layers after bonding enables precise alignment to the Si waveguides by stepper lithography, which consistently yields high optical coupling efficiency at the InP-Si bonding interface. Fig. 1(b) shows a schematic of an InGaAs PD fabricated on our platform. A two-step taper structure, comprising p- and n-type tapers, is introduced to enhance the optical coupling efficiency from the Si waveguide to the InGaAs absorber. The p-type taper employs a deep-ridge waveguide consisting of the InGaAs absorber, p-InP cladding, and p-contact layers. The absorber volume and taper length are optimized to balance absorption and diode capacitance, achieving both high responsivity and wide bandwidth.
+
+![](_page_1_Figure_4.jpeg)
+
+![](_page_1_Figure_5.jpeg)
+
+Fig. 2. (a) Dark I-V characteristics and (b) the external responsivity versus wavelength of a single InGaAs PD on a Si waveguide.
+
+To characterize each function of the InP-on-Si PIC, we fabricated and evaluated an InGaAs PD on a Si waveguide and a Si 90° hybrid as individual test structures. The dark current-voltage (I-V) characteristics of the InGaAs PD are shown in Fig. 2(a). The dark current at a reverse bias voltage of 5 V is 3 nA, indicating the high quality of the p-i-n structure grown on an InP wafer and transferred to SOI. Fig. 2(b) shows the external responsivity of the InGaAs PD versus wavelength, including input edge-coupling loss. Owing to the wide InGaAs absorption spectrum and high-efficiency two-step taper coupling, the device maintains a responsivity around 0.6 A/W from the C- to Lbands. Fig. 3(a) shows the relative phase deviations of the fabricated Si 90° hybrid estimated by an interferometric method. By an optimized design of the 4×4 MMI for the L-band and high-precision Si waveguide formation, the relative phase deviations of CH-2, CH-3, and CH-4 with respect to CH-1 are within ±7.5° over the L-band. Finally, we fabricated and characterized an InP-on-Si coherent-receiver PIC integrating a Si 90° hybrid with four InGaAs PDs. The four-channel average responsivity was 0.13 A/W at 1590 nm and higher than 0.1 A/W over the L-band. This value includes an intrinsic 6-dB splitting loss of the 90° hybrid, excess insertion loss of the MMI, and the input edge-
+
+![](_page_1_Figure_8.jpeg)
+
+![](_page_1_Figure_9.jpeg)
+
+Fig. 3. (a) Estimated relative phase deviations of the fabricated Si 90° hybrid and (b) I- and Q-channel responsivity imbalances versus wavelength of an InP-on-Si coherent-receiver PIC.
+
+coupling loss. As shown in Fig. 3(b), the I- and Q-channel responsivity imbalances within ±0.8 dB are remained over the L-band. These results reveal that our InP-on-Si PICs deliver performance comparable to our previous InP PICs [5], while maintaining high L-band responsivity in a substantially smaller footprint.
+
+## **3. ICR Performance Using InP-on-Si PICs: Comparison with InP PICs**
+
+![](_page_2_Figure_4.jpeg)
+
+Fig. 4. (a) Block diagram of the ICR architecture, (b) I/Q constellations for an ICR using InP-on-Si PICs at OSNR = 36 dB, and (c) Q-factor versus OSNR for ICRs using InP-on-Si PICs and InP PICs (DP 100-GBaud 16-QAM signal at 1600 nm).
+
+To evaluate system-level performance, we assembled two ICRs: one using InP-on-Si PICs and the other using InP PICs. The latter was used as a reference to verify that the InP-on-Si platform does not degrade receiver performance. Fig. 4(a) presents a block diagram of the ICR architecture. The input signal is split into transverse electric (TE) and transverse magnetic (TM) components by a polarization beam splitter (PBS), the TM branch is converted to TE by a half-wave plate (HWP), and these two signals are coupled to the X- and Y-polarization PICs. The electrical outputs of the balanced PDs on each PIC are connected to trans-impedance amplifiers (TIAs). The assembled ICR based on InP-on-Si PICs exhibited a per-channel 3-dB frequency bandwidth exceeding 70 GHz, which is sufficient for 100- GBaud operation. To evaluate the OSNR tolerance of the ICRs, back-to-back OSNR emulation (0.1-nm reference bandwidth) was employed using a DP 100-GBaud 16-QAM signal at 1600 nm. During the experiments, signal and LO powers at the PDs, optical filtering, and digital signal processing (DSP) settings were kept identical for both ICRs. Fig. 4(b) shows I/Q constellations at an OSNR of 36 dB for the InP-on-Si ICR, exhibiting clear symbol separation. Fig. 4(c) shows Q-factor as a function of OSNR for the two ICRs. From 20 to 36 dB OSNR, the two curves nearly overlap, indicating comparable OSNR tolerance in the entire range. Thus, these system-level L-band experiments confirm that the compact InP-on-Si coherent-receiver PIC provides receiver performance equivalent to that of the InP-PIC reference while reducing the footprint, and substantiate its validity for 800-Gb/s 16-QAM coherent receivers.
+
+## **4. Conclusion**
+
+We demonstrate compact InP-on-Si coherent-receiver PICs integrating a Si 90° hybrid with four InGaAs waveguide PDs within the footprint of 1.2 mm. These PIC achieve high responsivity of 0.13 A/W (four-channel average) at 1590 nm and I/Q channel-imbalances within ±0.8 dB over the L-band. In 800-Gb/s back-to-back OSNR experiments at 1600 nm (DP 100-GBaud 16-QAM), the ICR using the InP-on-Si PICs exhibits OSNR tolerance comparable to that of the InP-PIC reference. Consequently, our InP-on-Si integration platform delivers high receiver performance in a compact footprint, and is well suited for multichannel, multifunctional integration to further increase optical-fiber transmission capacity.
+
+### **5. Acknowledgment**
+
+This work was supported by the New Energy and Industrial Technology Development Organization (NEDO) (JPNP16007) and ARIM (JPMXP 1224IT0013).
+
+## **6. References**
+
+- [1] T. Kobayashi et al., "C+L+U-Band 14.85-THz WDM Transmission Over 80-km-Span G.654.E Fiber with Hybrid PPLN-OPA/EDFA U-Band Lumped Repeater Using 144-Gbaud PCS-QAM Signals," OFC2024, Th4A.1, (2024).
+- [2] M. Cantono, et al., "Opportunities and Challenges of C+L Transmission Systems," J. Light. Technol., vol. 38, no. 5, pp. 1050-1060, (2020).
+- [3] C. Doerr, et al. "Silicon Photonics in Optical Coherent Systems," in *Proceedings of the IEEE*, vol. 106, no. 12, pp. 2291-2301, (2018).
+- [4] P. Runge, et al., "Monolithic InP receiver chip with a 90° hybrid and 56 GHz balanced photodiodes," Opt. Express 20, B250-B255, (2012).
+- [5] T. Okimoto, et al., "InP-Based Butt-Joint Coupled Waveguide Photodiodes Integrated with Various Functions for 100 GBaud Coherent Detection," IEEE J. Select. Topics Quantum Electron., vol. 28, no. 2, pp. 1–7, (2022).
+- [6] T. Kikuchi et al., "III-V gain region/Si waveguide hybrid lasers by chip-on-wafer hydrophilic bonding process using UV-ozone treatment," Jpn. J. Appl. Phys., vol. 62, no. 12, pp. 122002-1–122002-8, (2023).
+- [7] T. Okimoto et al., "InP-based Optical Devices Integrated on Silicon Photonic Circuits," OFC2024, W1K.6, (2024).
+- [8] A. Beling, et al., "InP-based waveguide photodiodes heterogeneously integrated on silicon-on-insulator for photonic microwave generation," Opt. Express 21, 25901-25906 (2013)

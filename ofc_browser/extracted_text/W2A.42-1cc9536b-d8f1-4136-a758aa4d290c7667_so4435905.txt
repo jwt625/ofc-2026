@@ -1,0 +1,77 @@
+300-Gb/s/λ PAM4 IM/DD Link Enabled by GeSi Electroabsorption Modulator and BU-GRU Equalization
+Dan Li 1,2 , Yevhenii Osadchuk 3 , Armands Ostrovskis 4,5 , Tianyu Jiang 1,2 , Francesco Da Ros 6 , Richard Schatz 2 , Darko Zibar 6 , Minkyu Kim 7 , Peter De Heyn 7 , Lu Zhang 8 , Xianbin Yu 8 , Vjaceslavs Bobrovs 4 , Xiaodan Pang 8,4 , Oskars Ozolins 4,2 
+1 Department of Physics, KTH Royal Institute of Technology, 106 91 Stockholm, Sweden
+2 Kista High-Speed Transmission Lab, RISE Research Institutes of Sweden, 164 40 Kista, Sweden
+3 Center for Digital and Computational Humanities, University of Copenhagen, Karen Blixens Plads 8, 2300, Denmark
+4 Institute of Photonics, Electronics and Telecommunications, Riga Technical University, 1048 Riga, Latvia
+5 Keysight Technologies Deutschland GmbH, 71034 Böblingen, Germany
+6 DTU Electro, Technical University of Denmark, DTU, Kongens Lyngby, 2800, Denmark
+7 imec, 3001 Leuven, Belgium
+8 College of Information Science and Electronic Engineering, Zhejiang University, Hangzhou 321004, China
+Author e-mail address: danl4@kth.se, oskars.ozolins@rtu.ly
+Abstract: A 300-Gb/s/ $\lambda$ net data rate PAM4 link based on a >67-GHz GeSi electro-absorption modulator is demonstrated. By using a BU-GRU equalizer, we achieve BER below 6.25% overhead HD-FEC threshold after 100-meter SMF transmission. © 2026 The Author(s)
+1. Introduction
+To meet the growing demand for >1 Tb/s data center interconnects (DCI), single lane data rates of 200 Gb/s and above are required [1]. Silicon photonics (SiPh)-based modulators including silicon Mach-Zehnder modulators (MZMs), silicon ring resonator modulators (RRMs), and germanium-silicon (GeSi) electro-absorption modulators (EAMs) are the key building blocks for such high-speed transceivers [2,3]. Silicon MZMs have low insertion loss but require a large footprint and high drive voltage, limiting integration. RRMs [4] offer compact size and low energy consumption but are sensitive to thermal fluctuations, which challenge wavelength stability and limit high-speed operation. In contrast, GeSi EAMs based on the Franz-Keldysh effect combine compact footprint, low capacitance, and exceptionally high electro-optic (EO) bandwidth, positioning them as strong candidates for next-generation DCI [5]. However, GeSi EAMs suffer from self-heating under higher input optical power, which coupled with their nonlinear EO response, reduces optical modulation amplitude (OMA) and introduces significant signal distortion. In addition, chromatic dispersion (CD) and bandwidth limitations in intensity modulation and direct detection (IM/DD) systems further degrade transmission quality. Conventional equalizers such as feed-forward equalizers (FFE), decisionfeedback equalizers (DFE), and Volterra filters offer limited compensation capability at high symbol rates [6,7]. Therefore, more advanced equalization methods that will boost transmission performance are required. Neural networks (NNs), especially recurrent NNs (RNNs), are well-suited for sequence processing and can capture longrange temporal dependencies in high-speed signals. In [8], stacked long short-term memory (LSTM) outperforms shallow ones by building higher-level sequence representations, enabling 400 Gb/s/λ transmission with thin-film lithium niobate (TFLN) MZM. Gated recurrent units (GRUs) simplify the gating structure in LSTMs while retaining temporal modeling capability, providing a practical equalization solution [9].
+In this work, we experimentally demonstrate a 300-Gb/s (i.e., 160 Gbaud) per $\lambda$ net data rate PAM4 link in the C-band using a GeSi EAM with >67-GHz 3-dB EO bandwidth and 1.4-Vpp driving voltage using a stacked bi-directional GRU and unidirectional GRU (BU-GRU) equalizer. Bit-error-rate (BER) below 6.25% overhead (OH) hard-decision forward error correction (HD-FEC) threshold of $4.5 \times 10^{-3}$ after both back-to-back (B2B) and 100-m single-mode fiber (SMF) transmission is achieved. This shows that NN equalization is effective for high-speed signals while having limited OMA at the transmitter side.
+2. Experimental setup
+Fig. 1(a) shows the experimental setup. A pseudorandom bit sequence (PRBS) of >1×10 6 bits is generated using the Mersenne Twister with shuffled seeds and mapped to PAM4 symbols. The sequence is pulse-shaped with a root-raised cosine (RRC) filter with 0.3 roll-off and resampled to 256 GSa/s to match the arbitrary waveform generator (AWG, Keysight M8199B). The AWG delivers a 1.4-Vpp electrical drive voltage (limited by the nonlinearity in the system) through a 110-GHz bias tee (SHF BT110B) biased at minus 1.4 V, connected via a 400-mm-long 1-mm cable and 1-mm ground-signal (GS) RF probe to the GeSi EAM. The GeSi EAM fabricated using imee's ISIPP50G PDK shows 3.5 dB insertion loss at 0 V and 3.1 dB extinction ratio under minus 2 V bias at the operating wavelength of 1563 nm.
+Fig. 1. (a) Experimental setup. (b) EO response of AWG and GeSi EAM. Inset: Photo of GeSi EAM.
+Fig. 1(b) shows the measured frequency response of AWG and GeSi EAM at 1.4 V reverse bias, where the GeSi EAM exhibits a >67-GHz 3-dB EO bandwidth. A chip photo of GeSi EAM is shown as the inset. A tunable laser (Keysight N7776C) provides a continuous-wave (CW) tone at 1563 nm with 9.6 dBm output power. Optical power is boosted to +13 dBm post-modulation using an erbium-doped fiber amplifier (EDFA), which compensates for losses from grating couplers (4.5 dB each), the EAM (3.5 dB), self-heating (4 dB), and modulation. A wavelength-selective switch (WSS, Coherent WaveShaper) is set to a 400-GHz bandwidth to filter amplified spontaneous emission (ASE) noise. The modulated signal is transmitted over 100-m SMF and detected by a 100-GHz PIN photodiode. The electrical output is captured by a 110-GHz real-time oscilloscope (Keysight UXR1104A) at 256 GSa/s. To emulate real system conditions, no external triggering or clock synchronization is applied between the AWG and the DSO. Offline DSP at the receiver includes matched filtering, clock recovery, BU-GRU equalization, PAM4 de-mapping, and BER counting.
+Fig. 2(a) shows the architecture of the proposed BU-GRU equalizer. The input symbols $x_i$ are first processed by a bidirectional GRU layer with 40 hidden units ( $n_{hi}$ , 20 forward and 20 backward) to capture temporal dependencies in both directions, producing hidden states $h_i$ at each step. The outputs are then passed to a unidirectional GRU layer with 40 units ( $n_{h2}$ ), further modeling forward sequence features to build higher-level representations. The output is then flattened and passed to a fully connected layer with linear activation to produce a single symbol prediction $y_i$ . The model is trained on $2^{17}$ symbols across multiple traces and tested on $2^{15}$ symbols per received optical power (RoP) level. Mean squared error (MSE) is used as the loss function, and an Adam optimizer with an adaptive learning rate ranging from 0.0001 to 0.01 is applied. Fig. 2(b) shows the internal structure of a GRU cell, which consists of a reset gate, an update gate, and a candidate activation unit. $h_{i-1}$ and $h_i$ are the previous and current hidden states, respectively. $\sigma$ and tanh are the sigmoid and hyperbolic tangent activation functions. Input normalization, activation functions, and batch size are selected by a Bayesian optimizer. After pretraining the model at the highest RoP signal (5 dBm for B2B, 4.8 dBm for 100 m), transfer learning is used to fine-tune the model at other RoP levels. Finally, the predicted symbol from the regression model is post-processed using a k-nearest neighbors (KNN) classifier to assign discrete PAM4 levels, which are then compared with the original transmitted symbols to calculate the BER.
+3. Results and Discussion
+Fig. 3(a) shows BER as a function of the number of input taps. We adopt 2k + 1 symbols (k preceding and k succeeding) to ensure a symmetric temporal context. BER decreases as the number of input taps increases, since a larger input
+Fig. 2. Architectures of (a) BU-GRU equalizer, (b) GRU cell.
+Fig. 3. (a) BER versus number of input taps for BU-GRU in B2B. BER versus RoP for different equalizers (b) in B2B, (c) after 100-m SMF transmission. Insets: constellations after BU-GRU equalization.
+window allows the BU‑GRU to capture broader temporal dependencies and more effectively mitigate transmission impairments. However, increasing the input taps also leads to longer training and inference time. To balance performance and computational latency, 35 input taps are selected for the BU-GRU model. As shown in Fig. 3(b) and (c), we evaluate the BER performance of the proposed BU-GRU equalizer against both conventional and NN baselines, including 35-tap FFE, 35-tap FFE + 35-tap DFE, (35, 15, 9)-tap third-order Volterra equalizer, 35-tap unidirectional GRU (uni-GRU), and 35-tap bidirectional GRU (bi-GRU). In both B2B and 100-m SMF transmission scenarios, GRU-based models outperform conventional equalizers across all RoP, highlighting the strong temporal modeling capabilities of recurrent architectures. Our proposed BU-GRU achieves the best performance, reaching BER below 6.25% OH HD-FEC threshold at RoP = 5 dBm (4.22 × 10⁻3 for B2B and 4.36 × 10⁻3 for 100 m). The insets show the constellations after BU-GRU equalization at the highest RoP, demonstrating clear clustering of the PAM4 levels. Compared to the uni-GRU and bi-GRU, BU-GRU achieves BER reductions of 38% and 31% in B2B, 35% and 32% after 100-m SMF, respectively. BU-GRU builds hierarchical sequence representations by stacking bi- and unidirectional layers, offering improved mitigation of nonlinear distortion and inter-symbol interference.
+4. Conclusions 
+We experimentally demonstrated 300 Gb/s/λ net data rate PAM4 transmission in the C-band using a GeSi EAM with >67-GHz EO bandwidth and 1.4-Vpp drive voltage. The proposed BU-GRU equalizer significantly outperforms conventional equalizers and shallow GRU models, enabling 160-Gbaud transmission after 100-m SMF with BER below the 6.25% OH HD-FEC threshold. Compared to uni-GRU and bi-GRU baselines, BER reductions of up to 38% and 32% were achieved, respectively. These results demonstrate an effective NN equalization strategy for enabling beyond 1 Tb/s SiPh links, supporting compact and scalable optical interconnects in next-generation data centers.
+5. Acknowledgment 
+We thank imec for designing and fabricating GeSi EAM modulator. This work was supported in part by the China Scholarship Council (202308060346), in part by the LZP FLPP project 'DIMENSION' lzp 2024/1-0612, in part by the Swedish Research Council (VR) project 'BRAIN' 2022-04798, and in part by the Sweden´s Innovation Agency (VINNOVA) funded project (2024-02451).
+6. References 
+[1] X. Zhou et al. , "Beyond 1 Tb/s intra-data center interconnect technology: IM-DD OR coherent?" J. Lightw. Technol. , 38(2), 475-484 (2020).
+[2] X. Hu et al. , "280 Gbit/s PAM-4 Ge/Si electro-absorption modulator with 3-dB bandwidth beyond 110 GHz," OFC 2023, paper Th4A.3.
+[3] C. Bruynsteen et al. , "110 GHz GeSi Electroabsorption Modulator on a 300mm SiPh Platform Enabling High-Density 400G/lane IM/DD Links," ECOC 2025, paper Th.03.01.4.
+[4] D. Li et al. , "256 GBaud RRM-based OOK link in C-band enabled by neural network equalization," J. Lightw. Technol. , 43(19), 9148–9156 (2025).
+[5] A. Ostrovskis et al. , "Silicon Photonics GeSi Electro Absorption Modulator for Beyond 300 Gb/s Per λ Links," ECOC 2024, paper W2A.119. [6] Y. Osadchuk et al. , "Adder Convolutional Neural Network Equalizer for RRM-based O-band Optical Amplification-free 200 GBd OOK Transmission," ECOC 2024, paper Tu1D.3.
+[7] B. Sang et al. , "Low Complexity Neural Network Equalization Based on Multi-Symbol Output Technique for 200+ Gbps IM/DD Short Reach Optical System," J. Lightw. Technol. , 40(9), 2890–2900 (2022).
+[8] D. Li et al. , "400 Gbps Net Bitrate Optical-Amplification-Free TFLN-based PAM4 Link Enabled by BU-LSTM Equalization," ECOC 2025, paper Tu.03.06.6.
+[9] C. Han et al. , "Exploring 400 Gbps/λ and beyond with AI-accelerated silicon photonic slow-light technology," Nat. Commun, 16, 6547.
+300-Gb/s/λ PAM4 IM/DD Link Enabled by GeSi Electroabsorption Modulator and BU-GRU Equalization
+Dan Li 1,2 , Yevhenii Osadchuk 3 , Armands Ostrovskis 4,5 , Tianyu Jiang 1,2 , Toms Salgals 4 , Francesco Da Ros 6 , Richard Schatz 2 , Darko Zibar 6 , Minkyu Kim 7 , Peter De Heyn 7 , Lu Zhang 8 , Xianbin Yu 8 , Vjaceslavs Bobrovs 4 , Xiaodan Pang 8,4 , Oskars Ozolins 4,2 
+1 Department of Physics, KTH Royal Institute of Technology, 106 91 Stockholm, Sweden, danl4@kth.se
+2 Kista High-Speed Transmission Lab, RISE Research Institutes of Sweden, 164 40 Kista, Sweden
+3 Centre for Digital and Computational Humanities, University of Copenhagen, Karen Blixens Plads 8, 2300, Denmark
+4 Institute of Photonics, Electronics and Telecommunications, Riga Technical University, 1048 Riga, Latvia, oskars.ozolins@rtu.lv
+5 Keysight Technologies Deutschland GmbH, 71034 Böblingen, Germany
+6 DTU Electro, Technical University of Denmark, DTU, Kongens Lyngby, 2800, Denmark
+7 imec, 3001 Leuven, Belgium
+8 College of Information Science and Electronic Engineering, Zhejiang University, Hangzhou 321004, China
+Motivation
+GeSi EAM for High-Speed Modulation
+Next-generation data center links demand >200 Gb/s per λ.
+Silicon photonics enables compact and scalable transceivers.
+GeSi EAMs offer compact size, low capacitance, and high EO bandwidth.
+EAM - electro-absorption modulator / EO - electro-optic / IM/DD - intensity modulation and direct detection / RNN - recurrent neural network / GRU - gated recurrent unit
+BU-GRU for Nonlinear Equalization
+Nonlinear EO response of EAM.
+o Chromatic dispersion and bandwidth limitations in IM/DD.
+Conventional equalizers are inadequate at high symbol rates.
+RNNs capture long-range temporal dependencies in high-speed signals.
+Experimental Setup 
+PRBS - pseudorandom bit sequence / RRC - root-raised cosine (roll-off 0.3) / AWG - arbitrary waveform generator / EA - electrical amplifier / SMF - single-mode fiber / CW - continuous wave / PC - polarization controller / EDFA - erbium-doped fiber amplifier/ WSS - wavelength-selective switch / DSO - digital storage oscilloscope
+Results and Discussion 
+BU-GRU: a bidirectional GRU (bi-GRU) combined with a unidirectional GRU (uni-GRU)
+35 input taps selected to balance performance and latency.
+BU-GRU outperforms FFE, FFE+DFE, Volterra, uni-GRU, and bi-GRU.
+O Achieves BER below 6.25% HD-FEC threshold (4.5×10⁻³)
+after both B2B and 100 m SMF transmission.
+o uni-GRU: ↓ 38% BER (B2B), ↓ 35% BER (100 m)
+★ BU-GRU vs.
+o bi-GRU: ↓ 31% BER (B2B), ↓ 32% BER (100 m)
+(a) (b) 160 GBaud @B2B RoP = 5 dBmRoP = 4.8 dBm BU-GRU $10^{-1}$ 35-tap BER $10^{-2}$ L -▲- FFE + DFE -▲- FFE + DFE 6.25% OH HD-FEC 6.25% OH HD-FEC -♦- Volterra -♦- Volterra 6.25% OH HD-FEC Uni-GRU Uni-GRU Bi-GRU → Bi-GRU BU-GRU → BU-GRU 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 RoP [dBm] RoP [dBm] Number of input taps
+Conclusions
+Demonstrated 300 Gb/s/λ PAM4 transmission in the C-band using GeSi EAM and BU-GRU equalization.
+GeSi EAM offers >67 GHz EO bandwidth and 1.4 Vpp drive voltage.
+o BU-GRU equalizer achieves BER < 4.5×10⁻³ after 100 m SMF at 160 Gbaud.
+Outperforms uni-GRU and bi-GRU with BER reductions up to 38%.
+o Enables scalable NN equalization for beyond 1 Tb/s SiPh interconnects.

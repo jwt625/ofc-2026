@@ -1,0 +1,51 @@
+# **Chiplet-to-Chiplet All-to-All Interconnecting Photonic Interposer Using AWGRs with 3D Ultrafast-Laser-Inscription**
+
+**Yiting Jin, Shun-Hung Lee, Siwei Li, Georgios Charalampous, Anirban Samanta, S. J. Ben Yoo\***
+
+*Department of Electrical and Computer Engineering, University of California, Davis, CA 95616 yitin@ucdavis.edu, lshle@ucdavis.edu, swli@ucdavis.edu, gcharalampous@ucdavis.edu, asamanta@ucdavis.edu, \*sbyoo@ucdavis.edu*
+
+**Abstract:** We propose and demonstrate 3D photonic interposer with AWGRs designed for chipletto-chiplet all-to-all interconnection. 3D ultrafast laser inscription (ULI) technique achieves low loss coupling between silicon photonic chiplets through the photonic interposer with the AWGR. © 2025 The Author(s)
+
+#### **1. Introduction and Motivation**
+
+The demand for ever-increasing computational power, driven by advances in fields like generative AI and highperformance computing (HPC), has pushed traditional integrated circuit design to its limits. The shift towards a chiplet-based architecture, where smaller, specialized dies are integrated into a single package, offers a path forward, but hinges on the capabilities of the underlying interconnects. Today, chiplets are predominantly interconnected using electronic crossbar switches on package substrates, an approach with some inherent bottlenecks. These electrical interconnects suffer from limited bandwidth and reach, often requiring power-hungry equalizers to maintain signal integrity over long link reaches [1]. They lack true parallelism without complex serialization/deserialization (SerDes) electronics, are dependent on specific protocols, and cannot natively support all-to-all or event-driven communication, making the disaggregation of resources difficult. In particular, all-to-all interconnects at high-throughput at low latency are unavailable, causing unpredictable congestion. This paper reports our development of an energy-efficient, scalable, high-throughput, and dense 3D photonic interconnect fabric capable of providing all-to-all contention-free connectivity between chiplets in 3D stacks, thereby overcoming the fundamental barriers of current electrical-only interconnect solutions.
+
+## **2. Contention-Free All-to-All Interconnect Chiplet-to-Chiplet System Architecture**
+
+![](_page_0_Figure_9.jpeg)
+
+Fig. 1. (a) Overview of the architecture among multiple chiplets through a 3D photonic interconnect fabric built around arrayed waveguide grating routers (AWGRs), (b) schematic of the interposers with silicon photonic transceiver die chiplets intended for 3D integration of EIC, (c) vertical crosssectional schematic of the interponser with the EIC-PIC chiplets, (d) unique wavelength routing capability of an N×N AWGR (N =8), where each input port can communicate with every output port using a distinct wavelength, ensuring simultaneous data transfer without contention.
+
+Fig 1a and 1b. show an 8×8 AWGR-based optical interposer integrating eight 32-channel SiPh transceiver chiplets within a compact 3.18 × 3.18 cm footprint. The Si3N<sup>4</sup> photonic interposer hosts a central AWGR that provides wavelength-routed, contention-free all-to-all connectivity among chiplets. Each wavelength establishes a unique cyclic path between input and output ports, enabling simultaneous communication without active switching [2-3]. Ultrafast Laser Inscription (ULI) allows 3D waveguides to (Fig 1c) 3D couple the transceivers and interposer, forming a scalable, low-latency, and energy-efficient photonic interconnect fabric for high-performance multichiplet systems [4]. This architecture achieves true all-to-all connectivity, where any chiplet can communicate with any other at the same time via the AWGR in the photonic interposer (Fig 1d).
+
+#### **3 . Photonic Interposer with AWGRs with 3D Ultrafast-Laser-Inscription**
+
+By leveraging the low-loss Si₃N₄ platform, we designed and fabricated an AWGR-based optical interposer with 4 dB insertion loss and -22 dB crosstalk. Fig 2. (a) (b) (c) show the measured transmission spectra of 8×8, 16×16, and 32×32 AWGRs for all input–output channel combinations. Fig 2(d) shows the fabricated device produced using an ASML DUV Stepper (Model 5500/300), while Fig 2(e) highlights the star coupler region which is the most critical area in AWGR fabrication, with a minimum feature size of 250 nm.
+
+![](_page_1_Figure_5.jpeg)
+
+Fig. 2. Transmission spectra of (a) 8×8, (b) 16×16, and (c) 32×32 AWGRs; (d-e) Microscope images of fabricated AWGRs.
+
+To enable all-to-all communication with Si transceiver chips, we use alignment chip size bonded with BCB for integration, followed the process shown in Fig 3. (a). First, an amorphous Si (a-Si) hard mask was deposited on the aforementioned Si₃N₄ AWGRs to enable deep, vertical sidewall trench etching. Eight deep pockets for the transceiver dies were subsequently defined, followed by the patterning of alignment marks for precise chip placement. Next, BCB of 1um thickness was spin-coated on the interposer and soft-cured to remove residual solvent. In parallel, the SiPh dies were temporarily bonded to a transparent glass carrier using crystal wax, and the backside silicon substrate was removed by XeF₂ etching. Alignment bonding was then performed using the Ficontec tool, followed by hard curing at 150 °C for 8 hours under vacuum [5-6]. After curing, the glass carrier was debonded by soaking in heated photoresist remover 1165 and cleaned with solvent rinses. The bonded interposer was then ready for 3D ULI waveguide inscription.
+
+Building on our previous result of 0.59 dB coupling loss in a 3D ULI interposer [7], we applied this technique to fabricate optical interconnects between Si₃N₄ and Si waveguides. Since the earlier device was written in LPCVD oxide, we re-evaluated the ULI waveguide performance in HDPCVD oxide deposited after SiPH chip bonding. Fig 3.(b) shows cross-sections of waveguides inscribed at various focal depths in a 20 *μ*m HDPCVD oxide sample. A – 6 *μ*m focus depth achieved 0.275 dB/mm propagation loss [Fig. 3(c)]. Using these parameters, a ULI interposer connecting Si₃N₄ and Si waveguides was fabricated [Fig. 3(d)], and coupling was confirmed via IR imaging. Due to the tight configuration of the oxide thickness (~ 15 *μ*m) and the mode field diameter (~ 6 *μ*m) of the ULI waveguide, we observe that there are some portions of the light scattering into the substrate through the BCB underneath the AIM die. Inscribing across the gap between bonded die and interposer also causes waveguide structural discontinuation that induces excessive scattering. To further optimize this issue, we fabricated 3 more ULI interposers with different inscribing configuration. The 2-TX interposer is a straight horizontal waveguide, 3-TX is also a straight waveguide but elevating 1 *μ*m at the Si waveguide side to avoid BCB, and lastly 4-RX is a straight waveguide but terminated before the trench. The coupling loss for 2-TX, 3-TX, and 4-RX are 25.2 dB, 12.8 dB and 17.3 dB, respectively. From these results, we conclude that avoiding inscribing through the BCB and the trench greatly improves coupling.
+
+Fig. 3. (a) Process flow chart of bonding SiPh transceivers to AWGR interposers. (b) Cross-sectional image of the fabricated ULI waveguide with different focus depth. (c) Propagation loss of the test waveguide in HDPCVD oxide. (d) Top: Microscopic top view of the ULI interposer. Bottom: IR camera image of the Si waveguide output.
+
+## **4 . Summary and Future Work**
+
+We fabricated and characterized an all-to-all photonic interposer with AWGRs using 3D Ultrafast Laser Inscription (ULI). The fabrication demonstrated chip-to-chip bonding technology with micrometer-level alignment accuracy, and the 3D ULI interconnects showed 12.8 dB optical loss in the experiment. Future work can focus on optimizing the ULI process to compensate for height differences between bonded dies. In addition, the EIC that drives 32 transceivers can be integrated into the system to realize a fully functional photonic–electronic module.
+
+#### **5. References**
+
+- [1] Daudlin, S., Rizzo, A., Lee, S. *et al.* Three-dimensional photonic integration for ultra-low-energy, high-bandwidth interchip data links. *Nat. Photon.* **19**, 502–509 (2025).
+- [2] Mingye Fu, Guangyao Liu, Yichi Zhang, Roberto Proietti, and S. J. Ben Yoo, "Monolithic silicon photonic 32x32 thin-CLOS AWGR for allto-all interconnections," Opt. Express 31, 16623-16633 (2023)
+- [3] K. Zhang, X. Xiao, Y. Zhang and S. J. B. Yoo, "Verilog-A Compact Modeling and Simulation of AWGR based All-to-All Optical Interconnects," *2018 Conference on Lasers and Electro-Optics (CLEO)*, San Jose, CA, USA, 2018
+- [4] P. Grani, R. Proietti, V. Akella and S. J. Ben Yoo, "Design and Evaluation of AWGR-Based Photonic NoC Architectures for 2.5D Integrated High Performance Computing Systems," *2017 IEEE International Symposium on High Performance Computer Architecture (HPCA)*, Austin, TX, USA, 2017
+- [5] Zozulia, Aleksandr, et al. "Efficient heat sink by ultrathin BCB bonding for InP membrane lasers." *Japanese Journal of Applied Physics* 63.4 (2024): 04SP78.
+- [6] A. Rodrigues *et al*., "Low-Temperature Adhesive Wafer Bonding for Film Layer Transfer," *2024 IEEE 10th Electronics System-Integration Technology Conference (ESTC)*, Berlin, Germany, 2024
+- [7] Lee, Shun-Hung, Ling, Yi-Chun, Georgios Charalampous, Zhang Yichi, SJ Ben Yoo. "Scalable, Low-Loss, High-Precision-Alignment 3D Photonic Interposer Fabricated Using 3D Ultrafast Laser Inscription on Multilayer Silicon Photonic," 2025 IEEE Photonic Conference (IPC).
+
+### **6. Acknowledgements**
+
+The devices were fabricated at Marvell Nanofabrication Laboratory (Berkeley, CA) and Center for Nano-Micro Manufacturing (Davis, CA). This work was supported in part from the Defense Advanced Research Projects Agency (DARPA) under Contract #HR0011-16-C-0106 and Department of Defense.

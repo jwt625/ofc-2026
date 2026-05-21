@@ -1,0 +1,59 @@
+# **Curved Tunable Directional Couplers Empower Ultralow-Crosstalk, Low-Loss Optical Switch Fabrics**
+
+**Peng Bao1 , Jing Zhang2 , Günther Roelkens2 , Richard Penty1 , and Qixiang Cheng1,\***
+
+*1. Centre for Photonic Systems, Department of Engineering, University of Cambridge, Cambridge, CB3 0FA, UK 2. Photonics Research Group, Ghent University-imec, 9052 Ghent, Belgium \* Author e-mail address[: qc223@cam.ac.uk](mailto:qc223@cam.ac.uk)*
+
+**Abstract:** We present a compact curved tunable directional coupler for correcting power imbalance in Mach-Zender Interferometers, empowering an ultra-compact footprint, ultralow-crosstalk, lowloss 4×4 switch fabric with <−50dB crosstalk and <1.5dB on-chip loss. © 2025 The Author(s)
+
+#### **1. Introduction**
+
+Optical switching fabrics are increasingly attractive for handling the explosive growth of data center and highperformance computing (HPC) traffic, as they offer adaptive resource allocation, low latency, high per-port bandwidth, and superior energy efficiency [1]. Complementary metal-oxide-semiconductor (CMOS) compatible silicon photonics combines tight optical confinement and scalable manufacturing capacity, making it a highly promising platform for optical integrated switches [2]. To further increase port count, it is crucial to achieve ultralow-crosstalk and low loss within the silicon Mach–Zehnder interferometer (MZI) switch cells which are the fundamental building block of many SiP switch fabric. However, fabrication tolerances in the 3-dB couplers fundamentally limit the achievable extinction ratio [3] for the MZI cell. A common strategy is to employ cascaded MZI design [4, 5], where additional MZIs act as tunable couplers to compensate for deviations from the ideal 50:50 split. Although conceptually straightforward, this approach inevitably increases device footprint and insertion loss, as well as the required control plane complexity.
+
+In this work, we present a compact curved tunable directional coupler (CTDC), which consists of a curved DC actuated by two laterally shifted microheaters. The proposed design fully compensates for the fabrication-induced coupling errors and offers a broader operational bandwidth and higher process tolerance than conventional tunable DCs, owing to its curved geometry [6]. Moreover, the inherent structural asymmetry enables efficient tuning of the coupling ratio with low heating power [7]. By integrating CTDCs, we construct a compact switch cell with strongly suppressed crosstalk and demonstrate an ultralow-crosstalk, low-loss 4×4 switch fabric based on a double-layer network (DLN) topology, where the proposed cells are employed in the central stage. Experimentally, the switch fabric achieves crosstalk below -50 dB and an on-chip insertion loss of less than 1.5 dB.
+
+### **2. Switch design and packaging**
+
+Figure 1(a) shows the CTDC in top and cross-sectional views. The coupling region comprises two bent, equal-width (*w*) waveguides separated by a gap *g*. Their bending radius differs slightly, and the lower arm accommodates a larger bend angle for fan-in/out. Two metal heaters are placed above the silicon waveguides, each laterally offset by a distance *d* from the waveguide center, enabling us to manipulate the temperature gradient between the coupled waveguides, and thus tune the coupling ratio. We first choose *g* large enough to provide sufficient coupling length for thermal tuning, then optimize the remaining design parameters using the particle-swarm optimization (PSO) method [8]. Finally, thermal simulations are conducted to identify the value of *d* that maximizes the temperature gradient. As shown in Fig. 1(b), the coupling ratio of the optimized CTDC can be tuned between 40:60 and 60:40 with <20 mW heating while maintaining an essentially flat spectral response. This ±10% correction range is sufficient to compensate for typical fabrication-induced coupling-ratio errors.
+
+The 4×4 switch is based on a DLN topology, with a total of 12 switching cells. Fig. 1(c) illustrates its schematic, while the insets detail the structure of each switching cell. Since only the middle-stage cells in a DLN suffer from first-order crosstalk, we deploy our ultralow-crosstalk cells in the center stage and retain standard cells in the outer stages to reduce complexity. The central cell consists of two CTDCs for light splitting/combining and 180-µm metal heaters on both arms for phase tuning. During operation, the CTDCs' coupling ratios are adjusted to exactly 50:50 to eliminate any crosstalk. In the outer cells, the CTDCs are replaced by passive MMIs. All the components are optimized for TE polarization and operate in the C band.
+
+![](_page_1_Figure_2.jpeg)
+
+Fig. 1. (a) Schematic of our CTDC. (b) Coupling ratio of the CTDC versus the heating power dissipated. (c) Schematic of the 4×4 DLN switch. The insets show the detailed MZI cells. (d) Microscope image of the fabricated switch.
+
+The switch chip is fabricated via IMEC's multi-project wafer (MPW) process. Fig. 1(d) displays a microscope image of the chip, which occupies a footprint of 3.5×1.4 mm2 . An angled fiber array couples light into and out of the chip in a vertical configuration, with ~3 dB loss per facet. The chip's pads are wire-bonded to customized printed circuit boards (PCBs) for electrical fan-out, and the assembly is mounted on a copper heat sink. A thermistor attached beneath the chip and a thermoelectric cooler (TEC) underneath forms a closed-loop negative-feedback path to stabilize the temperature during testing.
+
+#### **3. Experimental testing and results**
+
+An automated electrical control plane is developed to drive the optical switch fabric. DAC codes are streamed from a host PC to a microcontroller, which forwards them over serial peripheral interface (SPI) to a 40-channel, 16-bit DAC board. The generated voltages are then used to bias the heaters on the chip. The switch is calibrated and characterized using a C-band tunable laser (TL) set to 0 dBm output power as the input source, and the powers from the four output ports are recorded with a multi-channel optical power meter (OPM). The input polarization is adjusted to TE using a polarization controller (PC) before coupling into the chip.
+
+The switch is calibrated on a cell-by-cell basis, and the extracted bias voltages are then compiled into a look-up table indexed by path configuration. For standard cells, we sweep the phase-shifter bias and monitor the relevant output ports; cross/bar settings are then chosen as the voltages that extremize the output power (difference). For the ultralow-crosstalk cells, both the phase shifter and CTDC biases are tuned using a algorithm modified from [9]: (1) tune the two CTDCs together in the same direction to minimize the bar-port power, briefly re-sweeping the phase-shifter bias after each CTDC update; (2) tune the two CTDCs in opposite directions to maximize the bar-port power, again re-optimizing the phase-shifter; (3) repeat steps (1)–(2) as needed until the extinction ratio of the cell in both bar and cross states exceeds 50 dB. In our experiments, the algorithm converged rapidly, requiring only 2–3 iterations per cell.
+
+Figures 2(a) and 2(b) plot the extinction ratio of a representative ultralow crosstalk switching cell before and after CTDC bias optimization. With the CTDCs unbiased, the bar-state extinction ratio is around 13 dB, indicating the passive DC itself has a coupling ratio far from the ideal 50:50. After biasing the CTDCs to their optimal point, the extinction ratio in both bar and cross states exceeds 50 dB, validating that the CTDCs correct coupling errors and mitigate the resultant crosstalk. The power consumption for each switching path is listed in Fig. 2(c), where each CTDC on average consumes around 45 mW of power for coupling ratio correction. Figure 2(d) details the spectral characteristics for all the 16 paths within a wavelength range from 1520 nm to 1580 nm. The switch achieves an ultralow crosstalk of below -50 dB and stays under -40 dB across a bandwidth exceeding 10 nm, enabled by the curved design. Moreover, it exhibits low on-chip propagation losses of below 1.5 dB for all the paths. The slight variations in losses arise from the differences in path length and the number of waveguide crossings.
+
+#### **4. Conclusion**
+
+In this work, we present a novel curved tunable directional coupler that corrects fabrication-induced coupling errors and incorporated this compact yet powerful component into a strictly non-blocking 4×4 silicon switch fabric to achieve
+
+![](_page_2_Figure_2.jpeg)
+
+Fig. 2. Output power vs. bias voltage measured at 1550 nm for an ultralow crosstalk switching cell (a) before (b) after bias optimization. (c) Power consumption for all the 16 switching paths. (d) Normalized transmission spectrum for each path.
+
+ultralow-crosstalk and low-loss operation. The inclusion of CTDCs effectively suppress the crosstalk in the elementary MZI cells, delivering <-50 dB crosstalk and <1.5 dB on-chip loss, thereby enabling scalable optical switch fabrics.
+
+#### **Acknowledgment**
+
+This work was funded by the UKRI-EPSRC, project QUDOS (EP/T028475/1); and the European Union's Horizon Europe Research and Innovation Program, projects PUNCH (101070560) and INSPIRE (101017088).
+
+## **References**
+
+- [1] Q. Cheng *et al.*, "Photonic switch fabrics in data center/high-performance computing networks," in *Integrated Photonics for Data Communication Applications*, 2023.
+- [2] B. G. Lee and N. Dupuis, "Silicon Photonic Switch Fabrics: Technology and Architecture," *J. Light. Technol.*, vol. 37, no. 1, pp. 6–20, Jan. 2019, doi: 10.1109/JLT.2018.2876828.
+- [3] P. Bao, Q. Cheng, J. Wei, G. Talli, M. Kuschnerov, and R. Penty, "Harnessing Self-Heating Effect for Ultralow-Crosstalk Electro-Optic Mach-Zehnder Switches," *Photonics Res.*, 2023, doi: 10.1364/prj.492807.
+- [4] K. Suzuki *et al.*, "Ultra-high-extinction-ratio 2 × 2 silicon optical switch with variable splitter," *Opt. Express, Vol. 23, Issue 7, pp. 9086-9092*, vol. 23, no. 7, pp. 9086–9092, Apr. 2015, doi: 10.1364/OE.23.009086.
+- [5] C. M. Wilkes *et al.*, "60 dB high-extinction auto-configured Mach–Zehnder interferometer," *Opt. Lett.*, vol. 41, no. 22, 2016, doi: 10.1364/ol.41.005318.
+- [6] H. Morino, T. Maruyama, and K. Iiyama, "Reduction of wavelength dependence of coupling characteristics using Si optical waveguide curved directional coupler," *J. Light. Technol.*, vol. 32, no. 12, pp. 2188–2192, Jun. 2014, doi: 10.1109/JLT.2014.2321660.
+- [7] A. Melloni, F. Morichetti, M. Sorel, M. J. Strain, P. Bassi, and P. Orlandi, "Tunable silicon photonics directional coupler driven by a transverse temperature gradient," *Opt. Lett. Vol. 38, Issue 6, pp. 863-865*, vol. 38, no. 6, pp. 863–865, Mar. 2013, doi: 10.1364/OL.38.000863.
+- [8] L. B. Dano, S. L. Lee, and W. H. Fang, "Simplified Approach for Optimizing Optical Asymmetric Curved Waveguides of Broadband Directional Couplers," *https://doi.org/10.1080/01468030.2019.1659460*, vol. 38, no. 5, pp. 285–303, Sep. 2019, doi: 10.1080/01468030.2019.1659460.
+- [9] D. A. B. Miller, "Perfect optics with imperfect components," *Optica*, vol. 2, no. 8, 2015, doi: 10.1364/optica.2.000747.

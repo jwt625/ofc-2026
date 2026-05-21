@@ -1,0 +1,233 @@
+#### Performance Thresholds for Optical Circuit Switching in LLM Inference
+
+Junsun Choi1,\*, Sunjin Choi<sup>1</sup> Sam Son<sup>1</sup> , Vladimir Stojanovic1,2, Yakun Sophia Shao<sup>1</sup> , and Borivoje Nikolic<sup>1</sup>
+
+*<sup>1</sup> Department of EECS, University of California, Berkeley, 387 Soda Hall, Berkeley, California 94720 <sup>2</sup> Ayar Labs, 695 River Oaks Parkway, San Jose, California 95134*
+
+> *\* junsun@berkeley.edu*
+
+Abstract: We analyze OCS-based networks for LLM inference, showing sub-700 ns reconfiguration is critical to outperform EPS without high link fan-out. High link fan-out can provide competitive performance even with slower reconfiguration across collective communication patterns. © 2025 The Author(s)
+
+#### 1. Introduction
+
+The rapid scaling of large language models (LLMs) has strained hardware infrastructure. Growing model sizes necessitate distributed serving due to limited per-device memory, introducing collective communication patterns like AllReduce and AlltoAll. Simultaneously, batching requests for higher compute utilization further amplify inter-node communication volume. Consequently, communication time has become a critical component of LLM execution time, making efficient interconnect network design essential for LLM serving. Optical circuit switches (OCS) have recently emerged as promising alternatives to traditional electrical packet switches (EPS), offering lower operational costs, minimal multi-hop switching penalties, and easier radix and bandwidth scaling. While OCS is already deployed in AI training clusters like Google's TPU pods [\[1\]](#page-2-0), its significant reconfiguration latency poses challenges for latency-sensitive LLM inference workloads. Current OCS technologies exhibit reconfiguration times spanning nanoseconds (SOA/AWGR-based [\[2\]](#page-2-1)) to milliseconds (MEMs-based [\[3\]](#page-2-2)), yet precise switch latency requirements for LLM inference remain unclear.
+
+In this work, we quantitatively analyze the performance requirements for OCS-based networks for LLM inference. Using a Hockney model [\[4\]](#page-2-3) parameterized with data from contemporary hardware and representative LLM workloads, we examine how OCS reconfiguration latency and link fan-out affect collective communication performance. Our contributions are threefold: (1) Quantifying that reconfiguration latency beyond 700 ns is the primary factor limiting the practicality of OCS for LLM inference, (2) Suggesting concurrent connectivity via physical link fan-out as a key OCS network design parameter particularly at high reconfiguration latency, and (3) Providing insights on the optimal choices for reconfiguration speed and link fan-out on OCS network design across latency-dominated (AllReduce) and bandwidth-dominated (AlltoAll) workloads.
+
+#### <span id="page-0-0"></span>2. Modeling and Methodology
+
+![](_page_0_Figure_11.jpeg)
+
+Fig. 1: Schematic of Optical Circuit Switch (OCS) fabric for multi-device LLM inference. (a) Physical topology of a compute cluster interconnected through optical links. Optical connectivity is implemented as either (b) a fast link with dynamic OCS reconfiguration, or (c) a wide, statically fanned-out link for high concurrency. The evaluated system adopts a hybrid configuration blending (b) and (c) to trade reconfiguration latency for link parallelism.
+
+We base our network model on NVIDIA DGX B200 and GB200 NVL72 systems, where each GPU is connected via bidirectional links totaling 900 GB/s of bandwidth. Both OCS and EPS are assumed to have equivalent per-
+
+<span id="page-1-4"></span>
+
+| Operation | Algorithm                              | Communication Time                                                                                                |
+|-----------|----------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+|           | Recursive Doubling (RD)                | $\log_2(N)\left(\alpha_r + m\beta + m\gamma\right)$                                                               |
+| AllReduce | Reduce-Scatter & AllGather (RS-AG)     | $2\log_2(N)\alpha_r + 2\frac{N-1}{N}m\beta + \frac{N-1}{N}m\gamma$                                                |
+|           | Ring                                   | $(N-1)(\alpha_r + \frac{m}{N}\beta + \frac{m}{N}\gamma)$                                                          |
+| AlltoAll  | Bruck                                  | $\log_2(N)(\alpha_r + \frac{m}{2}\beta)$                                                                          |
+| AlitoAli  | Spread-Out                             | $(N-1)(\alpha_r + \frac{m}{N}\beta)$                                                                              |
+| Both      | Point-to-Point pairwise exchange (P2P) | $(N-1)(\alpha_r+m\beta+m\gamma)$ (AR), $(N-1)(\alpha_r+\frac{m}{N}\beta)$ (A2A)                                   |
+| Botti     | Tree (radix= $k$ , depth= $d$ )        | $2d \cdot (\alpha_r + m\beta + m\gamma)$ (AR), $2d \cdot \alpha_r + 2\frac{k^d - 1}{k - 1}\frac{m}{N}\beta$ (A2A) |
+
+Table 1: N-GPU EPS communication time models.  $\alpha_r := \alpha_{setup} + h \cdot \alpha_{prop} + h/2 \cdot \alpha_{switch}$ . OCS communication model adds {(number of rounds)-1}  $\times \alpha_{reconf}$  to the EPS communication model. AR: AllReduce, A2A: AlltoAll.
+
+| $\alpha_{\rm setup}$ | $\alpha_{\rm switch}$ | $\alpha_{\rm prop}$ | β                        | γ                                |
+|----------------------|-----------------------|---------------------|--------------------------|----------------------------------|
+| 2 μs <sup>1</sup>    | 600 ns [5]            | 5 μs <sup>2</sup>   | $1/(900 \text{ GB/s})^3$ | $1/(2 \cdot 312 \text{ TB/s})^4$ |
+
+Table 2: Network parameters
+
+link bandwidth. All parameters including the switch radix follow NVLink system characteristics. The network topology is shown in Figure 1. Up to 72 GPUs, the L1 switches provide non-blocking connection between the GPUs. If the number of GPUs exceed 72, we stack more switch layers to form a fat-tree-like topology on top of the DGX/NVL-style topology.
+
+We analyze two representative collective operations central to LLM inference: AllReduce and AlltoAll. AllReduce is used to aggregate partial outputs of dense parameters in distributed serving. For AllReduce, we use Meta Llama3-70B as the dense LLM and use 8 GPUs with a batch size of 32. AlltoAll, on the other hand, is used to exchange intermediate activation between the attention layer and feedforward network (FFN) layer in mixture-of-experts (MoE) models. For AlltoAll, we use DeepSeek-v3 as the MoE model and use 128 GPUs with a batch size of 128, tensor parallelism (TP) degree of 4, and expert parallelism (EP) degree of 128.
+
+We model common algorithm variants used for N-GPU AllReduce and AlltoAll explained in Table 1 and report the runtime of the fastest variant for each data point. We model collective communication performance using the Hockney latency-bandwidth model [4]:  $T = \alpha + m\beta + m\gamma$ , where  $\alpha$  represents the link latency, m is the message size,  $\beta$  denotes the per-byte transmission time, and  $\gamma$  indicates the per-byte reduction compute time. We further decompose  $\alpha$  into software setup ( $\alpha_{setup}$ ), switching ( $\alpha_{switch}$ ), propagation ( $\alpha_{prop}$ ), and OCS reconfiguration components ( $\alpha_{reconf}$ ). We span  $\alpha_{reconf}$  from 100ns to 100 $\mu$ s to capture a broad range of OCS technologies [2, 3].
+
+Assuming that r is the number of communication rounds in the collective operation, h is the maximum number of hops among all connections in a communication round, and  $m_i$  is the message size in communication round i. Using an EPS-based network, the communication time is  $T = \sum_{i=1}^{r} (\alpha_{setup} + h \cdot \alpha_{prop} + h/2 \cdot \alpha_{switch} + m_i\beta)$ . We explore two different routing methods for OCS: direct routing and indirect routing. The former reconfigures the network to establish direct connections between nodes as required by the algorithm. For algorithms with interround dependencies, reconfiguration happens between every round. Thus, communication time can be represented as  $T = (r-1) \times \alpha_{reconf} + \sum_{i=1}^{r} (\alpha_{setup} + h \cdot \alpha_{prop} + m_i\beta)$ . The latter eliminates reconfiguration by maintaining connectivity through multi-hop routing, which requires enough connectivity of the network to avoid disconnected nodes. We assume  $\alpha_{switch} = 0$  for OCS, reflecting its lack of multi-hop latency, and that the first-round connection setup overlaps with LLM computation, so OCS does not incur  $\alpha_{reconf}$  in the first round.
+
+#### <span id="page-1-5"></span>3. Evaluation and Results
+
+![](_page_1_Figure_11.jpeg)
+
+Fig. 2: Latency breakdown: EPS vs OCS with varying reconfiguration times. (a) AllReduce (b) AlltoAll
+
+**Impact of Reconfiguration Latency:** Figure 2 shows AllReduce and AlltoAll time depending on the switch type and its reconfiguration time. In this analysis, we assume that a node can connect to only one other node
+
+<span id="page-1-0"></span><sup>&</sup>lt;sup>1</sup>Obtained through our internal NCCL benchmark experiments
+
+<span id="page-1-1"></span><sup>&</sup>lt;sup>2</sup>1.5m optical propagation time, which is a conservative setting as the maximum dimension of a DGX B200 is shorter than 1m.
+
+<span id="page-1-2"></span><sup>&</sup>lt;sup>3</sup>Assume the same bandwidth with NVLink 4.0 bandwidth
+
+<span id="page-1-3"></span><sup>&</sup>lt;sup>4</sup>Derived from NVIDIA A100 GPU performance
+
+<span id="page-2-5"></span>![](_page_2_Figure_2.jpeg)
+
+Fig. 3: Collective communication time as a function of link fan-out, spanning from 1 to *N* − 1. (a) Top: 8-GPU AllReduce (b) Bottom: 128-GPU AlltoAll. Vertical line indicates the first *k* where OCS outperforms EPS (*k* = 3 in (a), *k* = 6 in (b) with *O*(µ*s*) α*recon f*). Horizontal line is the communication time of a EPS-based system.
+
+through the OCS, so reconfiguration is needed to complete all connections required by the algorithm. The key observation is that once the reconfiguration time exceeds a few hundred nanoseconds, it starts to dominate the total communication time and quickly makes the OCS-based network less efficient than that of EPS. This is because OCS removes multi-hop switching latency in EPS but adds reconfiguration latency. Therefore, reconfiguration time should at least be in the same order of the sub-microsecond α*switch* to make OCS competitive for LLM inference. For example, AllReduce (8 GPUs) and AlltoAll (128 GPUs) with OCS take 0.90, 1.15, 3.67, 28.85× and 0.90, 1.05, 2.62, 18.32× the EPS time for reconfiguration delays of 100 ns, 1 µs, 10 µs, and 100 µs, respectively. Breakeven points for OCS to match EPS performance in both cases lie between α*recon f* = 400 − 700 ns given α*switch* = 600 ns.
+
+Effect of Link Fan-out: We investigate the impact of splitting each GPU off-chip link into *k* lower-bandwidth optical links on network performance. We define the *link fan-out k* and evaluate performance from *k* = 1 (single link) to *k* = *N* − 1 (links to all other GPUs). Sufficient link fan-out (high *k*) enables OCS to outperform the EPS baseline by allowing multiple concurrent connections, even with high reconfiguration latency. The advantage of *k*, at the cost of *k*× lower link bandwidth, differs by the routing method. Direct routing pre-configures *k* connections. For algorithms with inter-round dependencies (e.g. RD), *r* cannot be reduced but the *reconfiguration frequency* drops to ⌈ *r k* ⌉ − 1 from *r* − 1. For P2P, which doesn't have inter-round dependencies, *r* can be reduced to ⌈ *r k* ⌉ while β term is constant to *k*, which is a benefit under high *k*. Indirect routing removes reconfiguration at the cost of increased *r* and traffic volume. The increase of *r* is bounded by the maximum *h*. Tree topology minimizes *h* by bounding it to log*<sup>a</sup> h* where a is the tree radix. To represent indirect routing, we set the logical topology to (*k* −1)-ary tree when *k* ≥ 3 and choose (*k* −1)-ary tree AllReduce/AlltoAll algorithm, where depth = ⌈log*k*−<sup>1</sup> {*N*(*k*−2)+1}−1⌉ decreases as *k* increases. This benefit is demonstrated in Figure [3](#page-2-5) as the algorithm shifts from direct-routed *O*(log*N*) algorithms (RD, Bruck) to tree then P2P as *k* increases, depending on the β term cost which is visible when incrementing *k* cannot diminish *r*. An interesting observation is *k* = *N* − 1 results in the best performance across all reconfiguration times and operations, encouraging the development of high-radix optical fabric. Especially, under 100µ*s* reconfiguration, *k* = *N* −1 performs 2.83× and 5.24× better than EPS for AllReduce and AlltoAll.
+
+#### 4. Conclusion
+
+We quantify the performance requirements of OCS for multi-device LLM inference, showing that submicrosecond reconfiguration time is critical to match EPS efficiency. High-radix, wide-link architectures with physical fan-out can offset slower reconfiguration, thereby defining a joint design space for scalable optical connectivity in future large-scale LLM inference systems.
+
+#### <span id="page-2-0"></span>References
+
+- 1. N. Jouppi et al., "TPU v4: An Optically Reconfigurable Supercomputer for Machine Learning with Hardware Support for Embeddings," ACM ISCA 2023.
+- <span id="page-2-1"></span>2. A.S. Raja et al., "Ultrafast optical circuit switching for data centers using integrated soliton microcombs," Nat Commun 12, 5867 (2021).
+- <span id="page-2-2"></span>3. R. Urata et al., "Mission Apollo: Landing optical circuit switching at datacenter scale," arXiv preprint arXiv:2208.10041 (2022).
+- <span id="page-2-3"></span>4. R.W. Hockney et al., "The communication challenge for MPP: Intel Paragon and Meiko CS-2", Parallel Computing, Volume 20, Issue 3, 1994, Pages 389-398
+- <span id="page-2-4"></span>5. R. Grindely, " Tomahawk Ultra: Ethernet to the rescue for HPC and AI scale-up", Broadcom, 2025. [Press release]
+
+![](_page_3_Picture_0.jpeg)
+
+# Performance Thresholds for Optical Circuit Switching in LLM Inference
+
+![](_page_3_Picture_2.jpeg)
+
+Junsun Choi, Sunjin Choi, Sam Son, Vladimir Stojanovic, Yakun Sophia Shao, and Borivoje Nikolic University of California, Berkeley
+
+# Motivation
+
+#### LLM size growth outpaces single Device memory capacity growth [1]
+
+![](_page_3_Picture_6.jpeg)
+
+LLM workloads must be parallelized to multiple devices
+
+Example: Tensor Parallelism
+
+![](_page_3_Figure_9.jpeg)
+
+#### Communication becomes a critical part of LLM workload runtime
+
+- Batching requests further amplify inter-node communication volume
+- Exposed communication time: 32% (DLRM), 14% (non-MoE LLM)[2], Higher for MoE LLM Communication Pattern:
+
+![](_page_3_Figure_13.jpeg)
+
+![](_page_3_Picture_14.jpeg)
+
+![](_page_3_Picture_15.jpeg)
+
+MoE models: AlltoAll (EP)
+
+Why don't we replace electrical packet switches (EPSes) with optical circuit switches (OCSes) for LLM Inference?
+
+#### OCSes can provide:
+
+- Lower operational cost: link-agnostic, last for generations, incremental deployment
+- Minimal multi-hop switching penalties
+- Easier radix and bandwidth scaling
+
+#### Challenge: Reconfiguration latency of OCS
+
+Current OCS exhibit reconfiguration times spanning from O(ns) to O(ms)
+
+![](_page_3_Picture_23.jpeg)
+
+![](_page_3_Picture_24.jpeg)
+
+MEMs [4]
+
+## What is the precise performance threshold of OCS to be useful for LLM Inference?
+
+Acknowledgement: This project is funded by the Microelectronics Commons Program, a DoW initiative. [] "Memory Wall", Ayar Labs Glossary
+
+2] "MAD-Max Beyond Single-Node: Enabling Large Machine Learning Model Acceleration on Distributed Systems", ISCA 2024
+
+[3] "Ultrafast optical circuit switching for data centers using integrated soliton microcombs," Nat Commun 12, 5867 [] "Mission Apollo: Landing optical circuit switching at datacenter scale," arXiv preprint arXiv:2208.10041
+
+# Modeling and Methodology
+
+#### Network Topology
+
+Fat-Tree topology, similar to NVIDIA DGX B200 and GB200 NVL72 systems
+
+![](_page_3_Figure_34.jpeg)
+
+Optical connectivity is implemented as either a fast link with dynamic OCS reconfiguration (figure b), or a wide, statically fanned-out link for high concurrency (figure c)
+
+#### Performance Modeling
+
+ $T = \alpha + m\beta + m\gamma$  ( $\alpha$ : link latency,  $\beta$ : 1/bandwidth,  $\gamma$ : per-size reduction time, m: message size)
+
+- EPS-based system:  $\alpha = \alpha_{setup} + hop * \alpha_{prop} + \frac{hop}{2} * \alpha_{switch}$  (kernel setup, propagation, switching)  $T = \sum_{i=1}^{r} \alpha_{i} + m_{i}\beta + m_{i}\gamma$  (i: communication round, r: total communication rounds)
+- OCS-based system:
+  - $\circ$   $\alpha_{switch}$  is removed from  $\alpha$ , as OCS does not have multi-hop switching penalty
+  - $(r-1)\alpha_{reconf}$  should be added  $(\alpha_{reconf})$ : reconfiguration latency of the OCS)
+
+![](_page_3_Figure_42.jpeg)
+
+#### Workload
+
+- AllReduce: Meta Llama3-70B, 8-GPU, batch size=32
+- AlltoAll: DeepSeek-v3, 128-GPU, batch size=128, TP=4, EP=128
+
+#### Algorithms
+
+From the common algorithm variants, we report the runtime of the fastest algorithm.
+
+#### AllReduce Recursive Doubling (RD) AllReduce Ring AllReduce $T = log_2(N)(\alpha + m\beta + m\gamma)$ $T = (N-1)(\alpha + m/N \beta + m/N \gamma)$ 0 0 0 0 $log_2(N)$ Step 1 Exchange m, then reduce Step 2 Exchange m, then reduce
+
+![](_page_3_Figure_49.jpeg)
+
+Point-to-Point Pairwise Exchange (P2P): exchange m with N-1 GPUs then reduce, with one GPU per each round  $T = (N-1)(\alpha + m\beta + m\gamma)$ 
+
+#### <u>AlltoAll</u>
+
+![](_page_3_Figure_52.jpeg)
+
+ $T = (N-1)(\alpha + m/N\beta)$ 
+
+## Bruck AlltoAll
+
+At step s from 0, GPU i sends chunk x such that s-th bit of x is 1 to GPU i+2<sup>s</sup>  $\rightarrow T = log_2(N)(\alpha + m/2\beta)$ P2P AlltoAll: same as P2P AllReduce, but send m/N chunk per round instead of m $\rightarrow T = (N-1)(\alpha + m/N\beta)$ 
+
+## AllReduce: send all messages to the root node, then broadcast to leaf nodes AlltoAll: send one's message to all others by traversing the tree he number of rounds can be reduced by increasing k, reducing d
+
+## **Evaluation Results**
+
+Indirect routing: Tree algorithm
+
+## 1. Impact of Reconfiguration Latency
+
+- Assumption: A node can connect to only one other node through the OCS
+- Swept  $\alpha_{reconf}$  from 100ns to 100 $\mu$ s, compared with EPS baseline
+
+![](_page_3_Figure_60.jpeg)
+
+## OCS becomes competitive for LLM Inference vs. EPS if reconfiguration time < few 100ns
+
+- OCS removes multi-hop switching latency in EPS but adds reconfiguration latency
+- $\rightarrow \alpha_{reconf}$  should at least be in the same order of the sub-microsecond  $\alpha_{switch}$
+- Breakeven point in both cases is  $\alpha_{reconf} = 400 700ns$  given  $\alpha_{switch} = 600ns$
+
+#### 2. Effect of Link Fan-Out
+
+#### Idea: Multiple concurrent connections by splitting the link
+
+#### → remove reconfigurations
+
+- Splitting each GPU off-chip link into k lower-bandwidth optical links
+- Cost: k times lower link bandwidth =  $k\beta$  instead of  $\beta$
+- Swept k from 1 to N-1 (full connection with all other GPUs)
+
+![](_page_3_Figure_71.jpeg)
+
+## k = N-1 shows the best performance, overcoming high reconfiguration time, encouraging the development of high-radix optical fabric!
+
+Horizontal red dotted line: EPS baseline, vertical dotted line: first k when OCS outperforms EPS
+
+- Direct-routing algorithms: less reconfigurations
+  - P2P: r rounds  $\rightarrow \left| \frac{r}{r} \right|$  rounds
+  - Other algorithms: r-1 reconfigurations  $\rightarrow \left|\frac{r}{k}\right|-1$  reconfigurations
+- Indirect-routing algorithms: less reconfigurations, but more number of rounds and traffic
+- Increasing k:  $O(log N) \rightarrow tree \rightarrow P2P$  algorithm, depending on the  $\beta$  term cost

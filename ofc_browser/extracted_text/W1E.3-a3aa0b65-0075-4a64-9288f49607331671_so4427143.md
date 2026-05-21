@@ -1,0 +1,59 @@
+# Real-Time 1.2 Tb/s S- Band Silicon Photonics Transceiver Operating at 6-THz Tunable Bandwidth
+
+Baoluo Yan<sup>1,3</sup> $^{\dagger}$ , Dongchen Zhang<sup>1,3</sup> $^{\dagger}$ , Xingzhou Xu², Zhenqian Yang<sup>1,3</sup>, Hong Liu<sup>1,3</sup>, Huan Chen<sup>1,3</sup>, Yan Zhao<sup>1,3</sup>, Wenbo Yu<sup>1,3</sup>, Nishan Wu<sup>1,3</sup>, Zhiyong Zhao<sup>1,3</sup>, Kezhi Qiao<sup>1,3</sup>, Yong Chen<sup>1,3</sup>, Taili Wang², Hu Shi<sup>1,3</sup> $^{*}$ 
+
+<sup>1</sup>State Key Laboratory of Mobile Network and Mobile Multimedia Technology, Shenzhen 518055, China
+
+<sup>2</sup> ZTE Photonics Technology Japan Co. Ltd., Chiba City, 261-0023, Japan
+
+<sup>3</sup> WDM System Department of Wireline Product R&D Institute, ZTE Corporation, Beijing 100029, China
+
+<sup>†</sup> These authors contributed equally to this work. \*shi.hu@zte.com.cn
+
+**Abstract:** To our knowledge, we demonstrate the largest S-band real-time rate of 1.2 Tb/s transceiver achieving 6-THz tuning via external cavity ITLA with >17.5 dBm, and a B2B OSNR tolerance comparable to that of C/L-band. © 2026 The Author(s)
+
+### 1. Introduction and Research Motivation
+
+Over the past decade, the operational spectral width of coherent wavelength-division multiplexing (WDM) systems has continuously expanded, with super-C+L-band (12-THz) now commercially deployed to enhance long-haul backbone transmission capacity [1]. The S-band, which exhibits similar loss, dispersion, and nonlinearity to the C-band, is regarded as the next candidate band for expansion. By leveraging wavelength-insensitive LiNbO<sub>3</sub>-based and silicon photonic (SiPh) modulators, high-speed signal loading across S-, C-, and L-bands is enabled [2-4]. Combined with advanced offline digital signal processing (DSP) platforms, the S-band now supports an average rate of 1 Tb/s/ $\lambda$ [2]. As reviewed in Ref. [2], real-time S-band transmission demonstrations remain limited compared to offline studies. Differences in DSP implementation and burst error recording between offline and real-time DSP processing lead to performance gaps [5]. Therefore, developing real-time S-band transceiver is critical for commercialization.
+
+In 2022, NTT pioneered real-time S-band transmission at 500 Gb/s by integrating external cavity lasers into transceivers [6]. Since 2023, we have conducted iterative optimizations to improve the S-band rate to 500 Gb/s [7] and 800 Gb/s [8]. During this process, a key challenge emerged: SiPh transceivers require high-power integrated tunable laser assemblies (ITLAs) to maintain high transmit optical signal-to-noise ratio (OSNR) and receiver sensitivity. To address this, we developed a high-power, nano-packaged S-band ITLA in this work.
+
+In this work, we present a 1.2 Tb/s coherent real-time transceiver supporting a S-band 6-THz bandwidth, incorporating a wavelength-insensitive SiPh modulator and receiver, a silicon-based thermally tuned external cavity S-band ITLA with output power >17.5-dBm and a 6.4-THz bandwidth, and a thulium-doped fiber amplifier (TDFA). The ITLA design rationale and transceiver performance are discussed. To the best of our knowledge, this represents the highest real-time bit rate in the S-band, paving the way for future S-band DWDM commercial deployment.
+
+## 2. S-Band Coherent Transceiver Design Principles
+
+![](_page_0_Figure_11.jpeg)
+
+Fig. 1 (a1) Relationship between SOA injection current and output power within the 6.4-THz spectrum; The inset: photograph of the S-band nano-packaged ITLA and GC drive current across its tuning range; (b) Schematic of the optical path in the SiPh external-cavity S-band ITLA; (c) Output optical spectra of the S-band ITLA spaced at 150-GHz intervals; (d) Modulated 1.2 Tb/s signal spectrum of the S-band transceiver within a 6-THz range. (GC: gain chip; SOC: spatial optical coupling; PM: polarization-maintaining; SOA: semiconductor optical amplifiers)
+
+As shown in Fig. 1(b), the S-band laser oscillation is implemented using a GC based on quantum well structures. High-Q filtering is achieved via a Si-dual-microring filter, followed by frequency locking through a Si<sub>3</sub>N<sub>4</sub> etalon locker with <0.5 dB/cm propagation loss. Wavelength tuning is enabled via heater temperature control during this process. The locked output optical power is approximately 8 dBm, which is coupled into a SOA via a 2-f lensed SOC, introducing ~3 dB coupling loss. The S-band SOA provides ~15.5 dB gain, boosting the output power to 20.5 dBm. Finally, the signal passes through the SOC and monitoring components into a PMF, targeting a design output of 18 dBm. To further optimize output power uniformity and frequency offset across the 6.4-THz S-band (i.e., 197.255 THz to 203.625 THz or 1471.5546 nm to 1520.0530 nm), we calibrated the ITLA in 6.25-GHz steps. This achieved an output power >17.5 dBm, laser frequency offset ±1.5 GHz, and linewidth <30 kHz across the full 6.4-THz S-band. The insert in Fig.1(a) shows the photograph of the ITLA. The size is 25.0 mm (L) × 15.4 mm (W) × 6.5 mm (H). In Fig. 1(a), we measured the relationship between SOA injection current and output power at 7wavelength positions spanning the 6.4-THz S-band. With increased current, all wavelengths reached >17.5 dBm output. This is crucial for achieving 1.2 Tb/s and significantly improves the S-band transceiver output OSNR and receiver sensitivity. Notably, longer wavelengths required lower SOA currents compared to shorter wavelengths, as the SOA's gain peak is centered at the long-wavelength side of the S-band. This trend is also evident in the tuning spectra of Fig. 1(c), where shorter wavelengths exhibit higher amplified noise floors due to the large SOA currents used. Compensating for this gain deficit via higher injection currents degrades the signal spontaneous emission ratio (SSER), further deteriorating transmitted SNR. We also measured the GC drive currents across wavelengths, which remained within 80-120 mA. To demonstrate the S-band ITLA's tuning capability, we swept all operational frequencies in 150-GHz steps, confirming consistent output power and frequency spacing.
+
+![](_page_1_Figure_3.jpeg)
+
+Fig. 2 (a) Measured modulation loss and photodetector (PD) responsivity in the local oscillator path of the SiPh transceiver spanning 18.4 THz; Photograph of (b) Schematic of our proposed S-band SiPh transceiver; (b) coherent OE-MCM front-end.
+
+As shown in Figs. 2(b) and 2(c), the SiPh transceiver integrates a DSP-ASIC based on 5-nm complementary metal-oxide semiconductor technology, transimpedance amplifier (TIA), driver (DRV), and SiPh modulator/receiver photonic integrated circuit (PIC) via optoelectronic multi-chip module (OE-MCM) co-packaging, achieving enhanced bandwidth. This assembly supports up to ~70 GHz optoelectronic (O/E) bandwidth. We integrated the S-band ITLA described in the previous section with the OE-MCM and configured a TDFA to compensate for modulation loss. The DSP supports 135-GBaud operation with a maximum rate of 1.2 Tb/s (modem line rate of 1212.6 Tb/s in ethernet mode and 1275.9 Tb/s in optical transport network mode; this work demonstrates ethernet mode test results). As illustrated in Fig.2(a), We studied the response characteristics of the modulator and detector across the S-, C-, and L-bands. The S-band 6.4-THz width exhibits an average modulation loss of 31.7 dB for 1.2 Tb/s, slightly lower than the 33.1 dB in the C-/L-bands. The S-band Ge/Si PD responsivity peaks at 0.91 A/W, 4.67 times higher than at the L-band long-wave 1625.77 nm. This indicates that the S-band transceiver can theoretically achieve better back-to-back (B2B) performance than the C-band. Considering the short-wave SSER degradation, we achieved real-time 1.2 Tb/s signal processing over a 6-THz S-band range (i.e., 197.255 THz to 203.225 THz or 1475.1751 nm to 1520.0530 nm) by sacrificing 0.4 THz of usable spectrum. The S-band signal spectra after IQ modulator locking and TDFA amplification at short/mid/long wavelengths are shown in Fig. 1(d).
+
+# 3. Real-time 1.2Tb/s Signal Processing and Discussion
+
+![](_page_2_Figure_3.jpeg)
+
+Fig. 3 (a) 1.2T PCS-64QAM OSNR vs. pre-BER curves selected from 6 wavelength positions in the S-band 6-THz; inset: measured B2B ROSNR values under the ethernet mode; (b1)–(b4) constellation diagrams at different pre-BER levels obtained at 1475.1751 nm i.e., shortest wavelength in S band-6-THz range.
+
+We measured the pre-BER vs. OSNR curves at 6 uniformly distributed wavelengths within the 6-THz S-band spectral range, as shown in Fig. 3(a). The average pre-BER values at the FEC threshold are  $2.2 \times 10^{-2}$ . The B2B OSNR tolerance increases as wavelength decreases, ranging from 30.00 dB to 30.54 dB. This result nearly matches the B2B OSNR tolerance levels achieved in our prior 1.2 Tb/s commercial transceivers for the C-band 6-THz and L-band 6-THz[9]. Fig. 3(b1)–(b4) show the demodulated constellation diagrams of 1.2 Tb/s PCS-64QAM signals at different pre-BER levels at the shortest wavelength in the S-band.
+
+## 4. Conclusion
+
+We successfully developed a thermally tuned external cavity laser with a tuning frequency range from 197.225 THz to 203.625 THz, significantly enhancing the transmitted OSNR and receiver sensitivity for coherent transceiver. Furthermore, leveraging wavelength-insensitive 70-GHz SiPh PICs, we achieved the highest S-band bit rate of 1.2 Tb/s PCS-64QAM signal real-time processing, demonstrating B2B OSNR tolerance levels equivalent to those in the C- and L-bands across the 6-THz S-band range. This confirms that the S-band now possesses the capability for high-speed real-time signal processing, positioning it as the next communication band for coherent WDM system evolution following the extension of the L-band. This work was funded by the national key research and development program of China(2023YFB2807100).
+
+### References
+
+- [1] M. Zuo, et al., "Field Trial of Real-time 80-λ×400-Gb/s Single carrier 128-GBd DP-QPSK Transmission Covering 12-THz C+L Band over 2502-km Terrestrial G.652.D Fibre" ECOC 2023, M.A.5.3.
+- [2] F. Hamaoka, *et al.*, "Triple-Band WDM Transmission Beyond 100-Tb/s Capacity With 1-Tb/s/λ -Class Digital Coherent Channels" JLT. 43(4), 1716(2025).
+- [3] Y. Frignac, et al., "Record 158.4 Tb/s Transmission over 2x60 km Field SMF Using S+C+L 18THz-Bandwidth Lumped Amplification" ECOC 2023, M.A.5.2.
+- [4] X. Zhang, et al., "214.7 Tbit/s S, C, and L-band transmission over 50 km SSMF based on silicon photonic integrated transceivers" Opt. Express. 31(25), 41546(2023).
+- [5] H. Zhang. et al., "Real-Time 1.2Tb/s Large Capacity DCI Transmission" OFC 2024. W3H.3.
+- [6] F. Hamaoka, et al., "112.8-Tb/s Real-Time Transmission over 101 km in 16.95-THz Triple-Band (S, C, and L Bands) WDM Configuration" OECC 2022, PDP-A-3.
+- [7] A. Zhang, et al., "Investigation of real-time 128.7 Tbit/s DWDM transmission over 75 km G.654.D fiber using S + C + L 17-THz bandwidth lumped doped fiber amplifiers" Opt. Express. 33(16), 34041(2025).
+- [8] C. Wang, et al., "Real-Time Single-Carrier 800 Gbit/s S+C+L Band Optical Transmission Over 300 km Single-Mode Fiber" PTL 2025, 37(23), 1381(2025).
+- [9] M. Zuo, et al., "First Field Demonstration of Real-time Sub-100-Tb/s Transmission with Net 1.2-Tb/s Channels over 12-THz-wide Super C+L band along 305-km G.652.D fiber" OFC 2025, Th3C.1.

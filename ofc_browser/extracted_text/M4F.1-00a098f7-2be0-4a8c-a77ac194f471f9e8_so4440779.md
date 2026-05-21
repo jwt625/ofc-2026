@@ -1,0 +1,61 @@
+# **1024x1024 All-to-All Interconnect Thin-CLOS-LION system using 64 lambda routing on athermal 64x64 ULCF AWGRs**
+
+**S. J. Ben Yoo1 , Bart Fondeur2 , Michael Jin2 , Airon Zhang2 , Zheng Chen2 , Ashok Balakrishnan2** *1 University of California, Department of Electrical and Computer Engineering Davis, California, USA 2 Enablence Technologies, Inc. 2933 Bayview Dr, Fremont, CA 94538*
+
+**Abstract:** We design, integrate, and test 1024x1024 All-to-All Interconnect Thin-CLOS-LION system using 64 lambda routing on athermal 64x64 Uniform-Loss-Cyclic-Frequency AWGRs. The system-wide loss and crosstalk as low as 7.5 dB and -24 dB have been achieved. © 2024 The Author(s)
+
+#### **1. Introduction and Motivation**
+
+The data movements and interconnectivities within the data centers are limiting their throughput, latency, energy efficiency, and scalability [1]. Today's data centers predominantly use electronic switching technologies, but they require cascaded electronic switching to achieve scalability, adding latency and power consumption. Recently, Google demonstrated MEMS switches of size 136x136 using dynamic optical circuit switching with bijective, anyto-any input to output port connectivity utilizing 176 individually controllable MEMS mirrors that are eventually down-selected to yield the final 136 mirrors in the fully calibrated systems [2]. While such MEMS switches achieve impressively low latency, it does not offer all-to-all connectivity with wavelength-level granularity. On the other hand, All-to-All optical interconnects with *N*x*N* arrayed waveguide grating routers (AWGRs) can achieve low latency interconnect optical network (LION) utilizing wavelength routing via distributed switching at the *N* edge nodes supporting *N2* simultaneous circuits without contention utilizing *W* wavelengths (*W=N*) [3] 512x512 silicon photonic AWGR utilizing 512 wavelengths have been demonstrated [4]. More recently, THIN-CLOS LION *N*x*N* all-to-all interconnects utilizing a multiple (*M2 )* smaller *W*x*W* parallel AWGRs between the *N* edge nodes grouped in *M* groups of have been demonstrated experimentally, for example a 64x64 THIN-CLOS LION using four 32 x 32 AWGRs (*M=2, W=32, N=M\*W=64)[5].* In this paper, we design, fabricate, and integrate a 1024x1024 all-to-all THIN-CLOS LION interconnection system utilizing 256 parallel 64x64 athermal uniform-loss-cyclic frequency (ULCF [6]) AWGRs integrated in a single system. Instead of fabricating a single AWGR of size 1024x1024 that face challenges in optical loss and channel spacing between 1024 wavelengths, this approach offered reasonable 50 GHz channel spacing shared by 64 wavelength channels. Table 1 shows the comparisons of the architecture choices involving complexities.
+
+![](_page_0_Figure_7.jpeg)
+
+**Fig. 1 Schematic layout of the Thin Clos Network to effectuate an** *N***x***N* **AWGR from smaller** *W***x***W* **AWGRs with lower losses and lower crosstalk** [5]
+
+**Table 1. Comparison of hardware complexities for all-to-all** *N***x***N* **interconnection when (a) direct optical fiber interconnections, (b) single** *N***x***N* **AWGR, or (c) Thin-CLOS LION with** *W***x***W* **AWGRs are used.**
+
+| Architecture Choices           | Number<br>of<br>Nodes | Number<br>of TRXs | Number<br>of<br>Wavelengths | Number of<br>AWGRs | Number<br>of<br>Optical Wires |
+|--------------------------------|-----------------------|-------------------|-----------------------------|--------------------|-------------------------------|
+| Direct Optical Wire Connection | N                     | N2                | 1                           | 0                  | N(N-1)                        |
+| Single NxN AWGR                | N                     | N2                | N                           | 1                  | 2N                            |
+| Thin-CLOS LION (WxW AWGRs)     | N                     | N2                | W                           | M2                 | 2NM                           |
+
+## **2. Athermal, Polarization Independent Uniform-Loss-Cyclic-Frequency AWGRs**
+
+Polarization independent, athermal, uniformly low-loss, low-crosstalk, and low size-weight-power interconnects are all important requirements for large-scale high-performance and data center computing systems. As Table 1 illustrated, Thin-CLOS architecture offers a favorable choice compromising for reduced fiber counts compared with direct fiber connects and for reduced optical loss, crosstalk, and number of wavelengths compared with a single AWGR architecture. For our 1024x1024 Thin-CLOS LION, we utilized a single-layer 64x64silica Uniform-Loss-Cyclic-Frequency AWGRs over integrated photonic three-SiN layer Thin-CLOS LION with monolithically integrated four (M2=4) discrete parallel AWGRs [7]. This choice suffers additional optical losses rising from multiple waveguide crossings, but offers polarization and temperature independent operation already well established in the silica PLC AWGR manufacturing process. In addition ULCF AWGR offers uniform loss across the broad optical spectrum for every N2input-output port combinations, although 3dB coupling loss is inherent in the ULCF [6]. **Fig. 2a** shows the fabricated 64x64 50 GHz ULCF AWGR PLC and **Fig. 2b** shows measured optical transmission spectrum. Further testing of port-by-port optical measurements for 360 ULCF AWGR chips showed optical losses as low as 5 dB and adjacent crosstalk as low as -35 dB as shown in **Fig. 3a** and **Fig. 3b** while port to port and chip to chip nonuniformity is presumed to be mostly from the optical alignment repeatability issues.
+
+![](_page_1_Figure_4.jpeg)
+
+**Fig. 2. (a) A photograph of fabricated 64x64 ULCF PLC at 50 GHz pitch. The chip size is ~25 x 28 mm. (b) Measured optical transmission spectrum of the 64x64 ULCF PLC chip.**
+
+![](_page_1_Figure_6.jpeg)
+
+**Fig. 3. (a) Insertion Loss of 64x64 ULCF optical circuits and (b) Adjacent Channel crosstalk for 64x64 ULCF optical circuits**
+
+#### **3. Integration of 1024x1024 Thin-CLOS LION System and End-to-End System Verification**
+
+Among the 360 chosen 64x64 ULCF AWGRs mechanically packaged for athermal operation, 256 ULCF AWGRs have been chosen to be integrated into a 1024x1024 Thin-CLOS LION System. As opposed to the 3-layer SiN waveguide routings employed in the SiN integrated Thin-CLOS LION chip [7], we utilized modular fiber management interconnecting the 256 ULCF AWGRs in multiple groups as shown in **Fig. 4** together with the photograph of the packaged integrated system. Due to the athermal construction, no temperature controllers were necessary.
+
+![](_page_2_Picture_2.jpeg)
+
+**Fig. 4. Schematic diagram of 1024 x 1024 Thin-CLOS LION system build assembled in modules, and the photograph of the integrated system.**
+
+End-to-End system measurement of the packaged integrated Thin-CLOS system of **Fig. 5a** is as shown in the 1024x1024 testing map further revealed additional optical losses with the median optical loss at 10 dB while lowest losses of 7.5 and 7.0 dB end-to-end losses have also been measured as shown in **Fig. 5b.** End-to-End crosstalk and wavelength offsets (**Fig. 5c)** are unchanged primarily due to the athermal construction of the ULCF AWGR modules.
+
+![](_page_2_Figure_5.jpeg)
+
+**Fig. 5. System verification of 1024 x 1024 Thin-CLOS LION system. (a) End-to-End testing map, (b) insertion loss measurement results, and (c) wavelength offset measurements.**
+
+#### **4. Summary and Future Work**
+
+We report, for the first time to our knowledge, 1024x1024 All-to-All Interconnect Thin-CLOS-LION system using 64 lambda routing on athermal 64x64 ULCF AWGRs with power nonuniformity less than 0.5 dB. The system-wide loss and crosstalk as low as 7.5 dB and -24 dB have been achieved. Aside from the 3dB inherent losses in the ULCF AWGR architecture, reduction in additional excess losses is expected by introducing multi-layer waveguide crossings [7] and lower fiber coupling losses in future work.
+
+### **5. References**
+
+- [1] S. J. B. Yoo, "Prospects and Challenges of Photonic Switching in Data Centers and Computing Systems," *Journal of Lightwave Technology*, pp. 1–1, 2021, doi: 10.1109/JLT.2021.3136570.
+- [2] H. Liu, R. Urata, K. Yasumura, X. Zhou, R. Bannon, J. Berger, P. Dashti, N. Jouppi, C. Lam, S. Li, E. Mao, D. Nelson, G. Papen, M. Tariq, and A. Vahdat, "Lightwave Fabrics: At-Scale Optical Circuit Switching for Datacenter and Machine Learning Systems," in *Proceedings of the ACM SIGCOMM 2023 Conference*, Sep. 2023, pp. 499–515, doi: 10.1145/3603269.3604836.
+- [3] Y. W. Yin, R. Proietti, X. H. Ye, C. J. Nitta, V. Akella, and S. J. B. B. Yoo, "LIONS: An AWGR-Based Low-Latency Optical Switch for High-Performance Computing and Data Centers," *IEEE Journal of Selected Topics in Quantum Electronics*, vol. 19, no. 2, 2013, doi: 10.1109/jstqe.2012.2209174.
+- [4] S. Cheung, T. Su, K. Okamoto, and S. J. B. Yoo, "Ultra-compact Silicon Photonic 512x512 25-GHz Arrayed Waveguide Grating Router," *Selected Topics in Quantum Electronics, IEEE Journal of*, vol. PP, no. 99, p. 1, 2013, doi: 10.1109/JSTQE.2013.2295879.
+- [5] R. Proietti, X. Xiao, K. Zhang, G. Liu, H. Lu, P. Fotouhi, J. Messig, and S. J. B. Yoo, "Experimental Demonstration of a 64-Port Wavelength Routing Thin-CLOS System for Data Center Switching Architectures," *Journal of Optical Communications and Networking*, vol. 10, no. 7, pp. B49–B57, 2018, doi: 10.1364/JOCN.10.000B49.
+- [6] S. Kamei, M. Ishii, M. Itoh, I. Shibata, Y. Inoue, and T. Kitagawa, "64 x 64-channel uniform-loss and cyclic-frequency arrayed-waveguide grating router module," *Electron Lett*, vol. 39, no. 1, pp. 83–84, 2003, doi: 10.1049/el:20030044.
+- [7] M. Fu, G. Liu, Y. Zhang, R. Proietti, and S. J. Ben Yoo, "Monolithic silicon photonic 32x32 thin-CLOS AWGR for all-to-all interconnections," *Opt Express*, vol. 31, no. 10, p. 16623, May 2023, doi: 10.1364/OE.482938.

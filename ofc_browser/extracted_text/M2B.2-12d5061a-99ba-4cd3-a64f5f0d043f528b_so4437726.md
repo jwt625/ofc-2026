@@ -1,0 +1,88 @@
+# A 280 Gbps Optical Transceiver with Monolithically Integrated 110 GHz Silicon Microring Modulators and 110 GHz Germanium Photodetectors
+
+Xingyu Liu,<sup>1, 2</sup> Xu Wang,<sup>1, 2</sup> Fangchen Hu,<sup>2</sup> Zixuan Cai,<sup>1, 2</sup> Wei Chu,<sup>2</sup> Haibin Zhao,<sup>1</sup> Haiwen Cai,<sup>2</sup> Fengxin Yu,<sup>2\*</sup> and Xiao Hu<sup>2\*</sup>
+
+<sup>1</sup>College of Future Information Technology, Fudan University, Shanghai 200433, China <sup>2</sup>Zhangjiang Laboratory, Shanghai 201210, China \*e-mail address: Yufx@zjlab.ac.cn, huxiao@zjlab.ac.cn
+
+**Abstract:** We demonstrate a 280 Gbps optical link using a silicon depletion-type microring modulator and a germanium photodetector, both with 3dB bandwidth over 110 GHz and fabricated on 300 mm silicon photonic platform. © 2026 The Author(s)
+
+#### 1. Introduction
+
+The escalating computational demands of artificial intelligence (AI) and high-performance computing (HPC) are driving an urgent need for scalable optical interconnects that offer high bandwidth density and are viable for large-scale production. However, conventional III-V semiconductor-based solutions (e.g., InP) face integration challenges due to their incompatibility with complementary metal oxide semiconductor (CMOS) processes. This characteristic poses a significant barrier to integration with advanced packaging technology such as silicon interposers and TSVs, consequently challenging the achievement of efficient co-packaging with CPUs/GPUs.
+
+Silicon photonic is considered an ideal platform for co-packaged optics (CPO) and in-package optical I/O (OIO) due to its compatibility with standard CMOS processes. CMOS-compatible monolithic silicon photonic links, which integrate silicon modulators and germanium photodetectors (Ge-PDs), have demonstrated single-lane data rates of up to 200 Gbps [1-4]. However, the practical adoption of silicon-based technologies faces significant barriers. Mach-Zehnder modulators (MZMs) are hindered by their large footprint and high power consumption, which challenges high-density integration. GeSi electro-absorption modulators (EAMs) operate in the C/L band, which is mismatched with the datacom-standard O-band [3-5]. Meanwhile, microring modulator (MRM)-based links are typically limited to 50−160 Gbps per lane due to the sub-50 GHz 3-dB bandwidth common to both MRMs and Ge-PDs in demonstrated systems [6-10]. Developing a high-bandwidth O-band transceiver is therefore critical to meet the ≥200 Gbps per lane requirements for AI and HPC applications.
+
+Here we demonstrate an O-band optical link based on a silicon MRM and a Ge-PD, both fabricated on 300 mm silicon photonic platform and coupled via separate photonic chips. The MRM features 3dB bandwidth of 83 GHz at 0 V and 110 GHz at -3 V, while the Ge-PD exhibits a 110 GHz bandwidth at -3 V. This link achieves back-to-back transmission rates of 160 Gbps NRZ/280 Gbps PAM4, validating the potential of monolithically integrated MRM-based links for CPO and OIO in future efficient computing systems.
+
+### 2. Device Structure and Characterizations
+
+#### 2.1. Silicon Microring Modulator
+
+![](_page_0_Figure_12.jpeg)
+
+![](_page_0_Figure_13.jpeg)
+
+![](_page_0_Figure_14.jpeg)
+
+Fig. 1. (a) Three-dimensional (3D) schematic of the proposed MRM. (b) Transmission spectrum of the MRM. (c) Electro-optic S21 frequency response at 0V/-3V of the MRM.
+
+The MRM and Ge-PD used in this work were fabricated on 300 mm SOI platform using silicon-on-insulator wafers with a 220 nm top silicon layer and a 2  $\mu$ m buried oxide layer. Fig. 1(a) shows the schematic of the MRM. The key feature of the MRM structure is a narrow trench structure with lateral heavy doped PN junction to increase optical loss, thereby reducing the Q-factor and expanding the optical bandwidth while achieving high modulation efficiency. Additionally, narrow trench structure was implemented can minimize series resistance from the silicon slab, which helped maintain high electrical bandwidth.
+
+As shown in Fig. 1(b), the transmission spectrum of the fabricated MRM near the 1313 nm resonance exhibits a loaded Q-factor of 1630 and an FSR of 6.97 nm. The average wavelength shift around this resonance is 26.7 pm/V for bias from 0 V to -4 V, yielding a modulation efficiency ( $V\pi \cdot L$ ) of 0.538 V·cm. The electro-optic (EO) S21 response (Fig. 1(c)) was measured under 0 V and -3 V bias at detuned operating points corresponding to 6 dB, 5 dB, and 4 dB of insertion loss (IL). The resulting 3dB EO bandwidths at 0 V are 83 GHz, 97 GHz, and >110 GHz, respectively, while all exceed 110 GHz at -3 V bias.
+
+#### 2.2. Germanium Photodetector
+
+Fig. 2(a) shows the schematic of the Ge-PD. A high-quality thick germanium layer was epitaxially grown on a recessed silicon waveguide using a two-step Ge epitaxy process, embedding the bottom of the Ge absorption region into the 220 nm-thick silicon layer. To balance bandwidth and responsivity, the Ge region's width and length were optimized through simulation to 550 nm and 30 µm, respectively, and its thickness was controlled to about 300 nm.
+
+Shown in Fig. 2(b) is the static current-voltage (I-V) curve of the fabricated Ge-PD, which exhibits a dark current as low as 3.7 nA at -1 V, increasing to 8.9 nA at -3 V. The Ge-PD demonstrates a responsivity of 1.01 A/W at 1310 nm, and achieves a 3-dB bandwidth of 110 GHz under -3 V bias with 0.1 mA photocurrent (Fig. 2(c)). This high bandwidth matches the >110 GHz performance of the MRM, enabling a high-speed link supporting data rates beyond 200 Gbps. Moreover, the high responsivity combined with low dark current contributes to reduced transmit optical power requirement and static consumption, thereby improving overall link power efficiency.
+
+![](_page_1_Figure_7.jpeg)
+
+Fig. 2. (a) Cross section view of the proposed lateral Ge-PD. (b) Current-voltage (I-V) characteristics of Ge-PDs in the dark illuminated state. (c) Frequency response of the Ge-PD at -3V.
+
+#### 3. High-Speed Interconnect Characterization
+
+To evaluate the optical link's high-speed performance, the MRM and Ge-PD were fiber-connected in an eye diagram measurement setup (Fig. 3(a)). An O-band tunable laser supplied the optical carrier to the MRM; the modulated output was amplified by a PDFA, converted to an electrical signal by the PD, and finally captured for eye diagram analysis via a 110 GHz digital communication analyzer (DCA, Keysight N1000A). In the electrical path, a pseudo-random binary sequence (PRBS15-1) RF signal was generated by a 256 GSa/s arbitrary waveform generator (AWG, M8199B) and applied to the MRM through a bias-T and driver (SHF S807C) using a 110 GHz RF probe.
+
+To simplify the measurement, the optical modulation amplitude was optimized by adjusting the wavelength of the tunable laser instead of tuning the tungsten heater. While the Ge-PD was at -3 V bias, the link was evaluated under two different MRM bias conditions to assess its low-power and high-speed performance, respectively. Leveraging a 3dB bandwidth of 83 GHz at MRM 0 V bias, which corresponds to -6 dB operating point, the MRM was operated without a separate bias source or driver to eliminate their power consumption. With 0 dBm of optical power received at the Ge-PD, 140 Gbaud NRZ was achieved at Vpp=1.2 V and with 16 FFE taps; 64 Gbaud PAM4 was obtained at -3 dBm received optical power. To further explore the ultimate high-speed performance, we operated the MRM at -3 V bias, with the same -6 dB operating point. At Vpp = 2.7 V, 0 dBm received optical power, and 32 FFE taps, 160 Gbaud NRZ was achieved; 140 Gbaud PAM4 was obtained at -3 dBm received optical power (Fig.
+
+3(b)). Additionally, the use of a PDFA to compensate for link loss (primarily originating from ~13.5 dB insertion loss of three grating couplers) introduced a significant amount of amplified spontaneous emission (ASE) noise. We believe that our large-bandwidth transceiver, when equipped with edge coupling to reduce the coupling loss, can achieve even higher speeds.
+
+Table 1 compares this work's performance with recent state-of-the-art results of silicon modulator-germanium photodetector interconnects. To the best of our knowledge, the 280 Gbps interconnect speed achieved here is the highest reported to date for monolithic silicon photonic single-channel interconnects.
+
+![](_page_2_Figure_4.jpeg)
+
+Fig. 3. (a) Experimental setup for eye-diagram characterization. (b) Eye diagrams of the optical link.
+
+Table 1. Comparison of Key Performance Metrics for Optical Link Based on Silicon Modulator and Ge-PD
+
+| Tx<br>type | Tx BD<br>(GHz) | Rx<br>type | Rx BD<br>(GHz) | operating<br>band | single-channel rate<br>(Gbps) | DSP               | Ref       |
+|------------|----------------|------------|----------------|-------------------|-------------------------------|-------------------|-----------|
+| MZM        | 45             | Ge-PD      | 47             | O-band            | 200 (100Gbaud PAM4)           | 32tapFFE          | [1]       |
+| EAM        | 60             | Ge-PD      | 70             | C-band            | 200 (100Gbaud PAM4)           | FFE DFE           | [3]       |
+| EAM        | 110            | Ge-PD      | 50             | L-band            | 230 (105Gbaud PAM6)           | 1tapFFE           | [4]       |
+| EAM        | 65             | Ge-PD      | 66             | C-band            | 224 (112Gbaud PAM4)           | FFE DFE PNLE      | [5]       |
+| MRM        | -              | Ge-PD      | -              | O-band            | 64 (64Gbaud NRZ)              | CTLE 5tapFFE      | [7]       |
+| MRM        | 50             | Ge-PD      | 40             | O-band            | 160 (80Gbaud PAM4)            | 21tapDFE          | [8]       |
+| MRM        | -              | Ge-PD      | 39             | O-band            | 106 (53Gbaud PAM4)            | 21tapDFE<br>TDECQ | [9]       |
+| MRM        | 33.8           | Ge-PD      | 50             | O-band            | 50 (50Gbaud NRZ)              | -                 | [10]      |
+| MRM        | 110            | Ge-PD      | 110            | O-band            | 280 (140Gbaud PAM4)           | 32tapFFE          | This work |
+
+<sup>\*</sup> BD: Bandwidth. -: Data is not available.
+
+### **4. Conclusion**
+
+To address the short-reach interconnect bottleneck in AI/HPC, we demonstrate a high-speed O-band optical transceiver based on 300 mm silicon photonic platform. Through structural and process optimizations, the fabricated MRM and Ge-PD both have 3dB bandwidth exceeding 110 GHz. 140 Gbps NRZ/128 Gbps PAM4 in a low-power mode without external bias voltage on MRM, and record high 160 Gbps NRZ/280 Gbps PAM4 in a high-speed mode under a -3 V MRM bias have been achieved. This result proves the silicon photonic platform's potential for CPO/OIO interconnects and highlights a promising path for next-generation high-density, high-speed, low-power links.
+
+## **5. References**
+
+- [1] Z. Zhang et al., Laser & Photonics Reviews, vol. 19, no. 4, p. 2401249 (2025).
+- [2] Q. Li et al., J. Lightwave Technol., vol. 42, no. 15, pp. 5175–5181 (2024).
+- [3] C. Yang *et al.*, *IET Conf. Proc.*, vol. 2023, no. 34, pp. 676–679 (2023).
+- [4] D. W. U. Chan et al., IET Conf. Proc., vol. 2023, no. 34, pp. 1314–1317 (2023).
+- [5] D. W. U. Chan et al., J. Lightwave Technol., vol. 40, no. 8, pp. 2265–2273 (2022).
+- [6] Q. Ma et al., in BCICTS 2024, Fort Lauderdale, FL, USA: IEEE, Oct. 2024, pp. 99–102 (2024).
+- [7] A. Li et al., J. Semicond., vol. 45, no. 7, p. 070501 (2024).
+- [8] X. Wu et al., in OFC 2023, San Diego California: Optica Publishing Group, 2023, p. Tu2E.3. (2023).
+- [9] S. Fathololoumi et al., J. Lightwave Technol., vol. 39, no. 4, pp. 1155–1161 (2021).
+- [10] M. Moralis-Pegios et al., Opt. Express, vol. 28, no. 4, p. 5706 (2020).
